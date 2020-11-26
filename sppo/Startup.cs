@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using sppo.Areas.Identity.Data;
+using sppo.Data;
 
 namespace sppo
 {
@@ -25,6 +27,7 @@ namespace sppo
         {
             services.AddControllersWithViews();
             services.AddRazorPages();
+
             services.Configure<IdentityOptions>(options =>
             {
                 // here we define lockout settings
@@ -32,6 +35,7 @@ namespace sppo
                 options.Lockout.MaxFailedAccessAttempts = 4;
                 options.Lockout.AllowedForNewUsers = true;
             });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
