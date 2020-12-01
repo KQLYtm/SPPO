@@ -8,10 +8,13 @@
 <table class="table table-hover">
     <thead>
         <tr>
+            <td>Id</td>
             <td>Username</td>
             <td>Email</td>
-            <td>ProfilePicture</td>
-          
+            <td>Create Date</td>
+            <td>Avg Grade</td>
+            <td>Profile Picture</td>
+
         </tr>
     </thead>
     <tbody>
@@ -22,7 +25,12 @@
             <tr>
                 <td>@s.Username</td>
                 <td>@s.Email</td>
+                <td>@s.CreateDate</td>
+                <td>@s.AvgGrade</td>
                 <td><img src=@picturePath asp-append-version="true" class="rounded-circle" height="40" width="40" alt="Picture not loaded." />
+                </td>
+                <td><button class="btn btn-primary" onclick="window.location='/Profile/Show?profileID=@s.Id'">Detalji</button></td>
+                <td><a href="/Profile/Show?profileID=@s.Id">Klikni</a></td>
             </tr>
         }
     </tbody>

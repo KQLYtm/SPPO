@@ -17,9 +17,10 @@ namespace sppo.Models
         public string ProfilePicture{ get; set; }
         public DateTime? CreateDate { get; set; }
         public float? AvgGrade { get; set; }
+        public string PhoneNumber { get; set; }
         public string User { get; set; }
-        public string Company{ get; set; }
-        public string Language{ get; set; }
+        public string Company { get; set; }
+        public string Language { get; set; }
         public string Theme { get; set; }
 
     }

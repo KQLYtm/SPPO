@@ -27,23 +27,61 @@ namespace sppo.Controllers
             _webHostEnvironment = webHostEnvironment;
             _userManager = userManager;
         }
-
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult>Show(string profileID)
         {
-
-
-            var profile = _db.profiles.Select(a => new ProfileVM
+            var profile = await _db.profiles.Where(s=>s.Id==profileID).Select(a => new ProfileVM
             {
                 Id = a.Id,
                 Username = a.UserName,
                 Email = a.Email,
                 ProfilePicture = a.ProfilePicture,
-                User = a.User.Account.UserName,
-                Company =a.Company.Account.UserName,
-                Language=a.Language.Name,
-                Theme=a.Theme.Name
 
-            }).ToList();
+
+            }).ToListAsync();
+
+            return View(profile);
+        }
+       public async Task<IActionResult> Details()
+        {
+            var profile = await _userManager.FindByNameAsync(User.Identity.Name);
+            var profileObj = _db.profiles.Where(d => d.Id == profile.Id)
+                .Include(d => d.Company)
+                .Include(x => x.Language)
+                .SingleOrDefault();
+
+            ProfileVM userDetails = new ProfileVM()
+            {
+                Id = profile.Id,
+                Username = profile.UserName,
+                Email = profile.Email,
+                CreateDate = profile.CreateDate,
+                AvgGrade = profile.AvgGrade,
+                PhoneNumber=profile.PhoneNumber,
+                ProfilePicture = profile.ProfilePicture,
+                User = profile.User?.FirstName,
+                Company = profile.Company?.Name,
+                Language = profile.Language?.Name,
+                Theme = profile.Theme?.Name,
+            };
+
+            return View(userDetails);
+
+        }
+        public async Task<IActionResult> Index()
+        {
+
+            var profile = await _db.profiles.Select(a => new ProfileVM
+            {
+                Id = a.Id,
+                Username = a.UserName,
+                Email = a.Email,
+                ProfilePicture = a.ProfilePicture,
+                //User = a.User.Account.UserName,
+                //Company =a.Company.Account.UserName,
+                //Language=a.Language.Name,
+                //Theme=a.Theme.Name
+
+            }).ToListAsync();
 
 
             return View(profile);
@@ -61,7 +99,7 @@ namespace sppo.Controllers
         {
             if (ModelState.IsValid)
             {
-                string uniquFileName = UploadedFile(model);
+                string uniquFileName = UploadedPicture(model);
                 Profile a = new Profile
                 {
                    UserName=model.Username,
@@ -72,12 +110,12 @@ namespace sppo.Controllers
 
                 _db.Add(a);
                 await _db.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
             return View();
         }
 
-        private string UploadedFile(ProfileDetailsVM model)
+        private string UploadedPicture(ProfileDetailsVM model)
         {
             string uniqueFileName = null;
 
