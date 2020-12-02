@@ -15,7 +15,6 @@ namespace sppo.Controllers
     {
         private readonly UserManager<Profile> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-
         public UserRolesController(UserManager<Profile> userManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
