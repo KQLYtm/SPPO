@@ -27,7 +27,15 @@ namespace sppo
         {
             services.AddControllersWithViews();
             services.AddRazorPages();
-            
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // here we define lockout settings
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+                options.Lockout.MaxFailedAccessAttempts = 4;
+                options.Lockout.AllowedForNewUsers = true;
+            });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
