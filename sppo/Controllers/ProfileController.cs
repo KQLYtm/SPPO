@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ using sppo.Models.ProfileVMs;
 
 namespace sppo.Controllers
 {
+    [Authorize]
     public class ProfileController : Controller
     {
         private readonly UserManager<Profile> _userManager;
@@ -47,6 +49,7 @@ namespace sppo.Controllers
             var profileObj = _db.profiles.Where(d => d.Id == profile.Id)
                 .Include(d => d.Company)
                 .Include(x => x.Language)
+                .Include(x=>x.User)
                 .SingleOrDefault();
 
             ProfileVM userDetails = new ProfileVM()
@@ -59,6 +62,8 @@ namespace sppo.Controllers
                 PhoneNumber=profile.PhoneNumber,
                 ProfilePicture = profile.ProfilePicture,
                 User = profile.User?.FirstName,
+                AdressUser=profile.User?.Address,
+                AdressCompany=profile.Company?.Adress,
                 Company = profile.Company?.Name,
                 Language = profile.Language?.Name,
                 Theme = profile.Theme?.Name,
