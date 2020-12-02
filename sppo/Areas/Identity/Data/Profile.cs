@@ -10,7 +10,7 @@ namespace sppo.Areas.Identity.Data
     // Add profile data for application users by adding properties to the Profile class
     public class Profile : IdentityUser
     {
-        public byte[] Image { get; set; }
+        public string ProfilePicture { get; set; }
         public DateTime? CreateDate { get; set; }
         public float? AvgGrade { get; set; }
         public int? UserID { get; set; }

@@ -1,51 +1,48 @@
 ﻿@page
 @model LoginModel
 
-@{ ViewData["Title"] = "Log in"; }
-
-<h1>@ViewData["Title"]</h1>
+@{ ViewData["Title"] = "Log in";
+    Layout = "_LayoutAnonim";}
 <body>
-    <div class="row">
-        <div class="login-box">
-            <section>
-                <form id="account" method="post">
-                    <h4>Use a local account to log in.</h4>
-                    <hr />
-                    <div asp-validation-summary="All" class="text-danger"></div>
-                    <div class="textbox">
-                        @*<i class="fa fa-user" aria-hidden="true"></i>*@
-                        @*<label asp-for="Input.Email"></label>*@
-                        <input placeholder="Email" asp-for="Input.Email" class="form-control" />
-                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+
+    <div class="login-box">
+        <section>
+            <form id="account" method="post">
+                <h4>Use a local account to log in.</h4>
+                <hr />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="textbox">
+                    @*<i class="fas fa-user" aria-hidden="true"></i>*@
+                    <input placeholder="Email" asp-for="Input.Email" class="form-control" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="textbox">
+                    @*<i class="fas fa-lock" aria-hidden="true"></i>*@
+                    <input placeholder="Password" asp-for="Input.Password" class="form-control" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div>
+                    <div class="checkbox">
+                        <label asp-for="Input.RememberMe">
+                            <input asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
                     </div>
-                    <div class="textbox">
-                        @*<i class="fa fa-lock" aria-hidden="true"></i>*@
-                        @*<label asp-for="Input.Password"></label>*@
-                        <input placeholder="Password" asp-for="Input.Password" class="form-control" />
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
-                    </div>
-                    <div>
-                        <div class="checkbox">
-                            <label asp-for="Input.RememberMe">
-                                <input asp-for="Input.RememberMe" />
-                                @Html.DisplayNameFor(m => m.Input.RememberMe)
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn" type="submit">Log in</button>
-                    </div>
-                    <div class="form-group">
-                        <p>
-                            <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                        </p>
-                        <p>
-                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                        </p>
-                    </div>
-                </form>
-            </section>
-        </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn" type="submit">Log in</button>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                    </p>
+                    <p>
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                    </p>
+                </div>
+            </form>
+        </section>
+    </div>
 </body>
 @*<div class="col-md-6 col-md-offset-2">
         <section>
