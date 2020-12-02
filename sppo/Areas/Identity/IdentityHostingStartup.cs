@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using sppo.Areas.Identity.Data;
 using sppo.Data;
 
@@ -20,10 +21,13 @@ namespace sppo.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("MyContextConnection")));
 
-                services.AddIdentity<Profile, IdentityRole>()
+                services.AddIdentity<Profile, IdentityRole>(
+                  options => options.SignIn.RequireConfirmedAccount = true)
                  .AddEntityFrameworkStores<MyContext>()
-                 .AddDefaultUI()
                  .AddDefaultTokenProviders();
+
+                services.AddScoped<Profile>();
+
             });
         }
     }

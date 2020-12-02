@@ -5,13 +5,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using sppo.Data;
 using sppo.Models;
+using SPPO.EntityModels;
 
 namespace sppo.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly MyContext db;
 
         public HomeController(ILogger<HomeController> logger)
         {
