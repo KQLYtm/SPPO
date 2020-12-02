@@ -11,12 +11,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using sppo.Areas.Identity.Data;
-using sppo.Data;
-using SPPO.EntityModels;
 
 namespace sppo.Areas.Identity.Pages.Account
 {
@@ -27,20 +24,17 @@ namespace sppo.Areas.Identity.Pages.Account
         private readonly UserManager<Profile> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private MyContext _db;
 
         public RegisterModel(
             UserManager<Profile> userManager,
             SignInManager<Profile> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
-            MyContext db)
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _db = db;
         }
 
         [BindProperty]
@@ -67,76 +61,10 @@ namespace sppo.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string PhoneNumber { get; set; }
-            public string CompanyName { get; set; }
-            public City City { get; set; }
-            public int CityId { get; set; }
-
-        }
-        public List<SelectListItem> cities { get; set; }
-
-        List<SelectListItem> LoadCities()
-        {
-            List<SelectListItem> g = _db.cities.Select(x => new SelectListItem
-            {
-                Text = x.Name,
-                Value = x.Id.ToString()
-            }).ToList();
-            return g;
         }
 
-        private User AddUser()
+        public async Task OnGetAsync(string returnUrl = null) 
         {
-            User u;
-            if (Input.CompanyName == null)
-            {
-                u = new User
-                {
-                    FirstName = Input.FirstName,
-                    LastName = Input.LastName,
-                    CityId = Input.CityId
-                };
-                _db.Add(u);
-                _db.SaveChanges();
-                return u;
-            }
-            else
-            {
-                u = new User();
-                u.Id = 0;
-                return u;
-            }
-        }
-
-        private Company AddCompany()
-        {
-            Company c;
-            if (Input.CompanyName != null)
-            {
-                c = new Company
-                {
-                    CompanyRepresenterFirstName = Input.FirstName,
-                    CompanyRepresenterLastName = Input.LastName,
-                    CityId = Input.CityId,
-                    Name = Input.CompanyName
-                };
-                _db.Add(c);
-                _db.SaveChanges();
-                return c;
-            }
-            else
-            {
-                c = new Company();
-                c.Id = 0;
-                return c;
-            }
-        }
-
-        public async Task OnGetAsync(string returnUrl = null)
-        {
-            cities = LoadCities();
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -147,22 +75,7 @@ namespace sppo.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                cities = LoadCities();
-                User u = AddUser();
-                Company c = AddCompany();
-
-                var user = new Profile { UserName = Input.Email, Email = Input.Email/*, PhoneNumber = Input.PhoneNumber*/ };
-                if (c.Id == 0)
-                {
-                    user.CompanyID = null;
-                    user.UserID = u.Id;
-                }
-                else
-                {
-                    user.CompanyID = c.Id;
-                    user.UserID = null;
-                }
-
+                var user = new Profile { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

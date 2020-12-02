@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>3bc1d71d-b40d-4a83-b6f8-427bfaca6030</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +13,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
-    <PackageReference Include="SendGrid" Version="9.21.2" />
   </ItemGroup>
 
 </Project>
