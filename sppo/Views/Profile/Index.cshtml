@@ -1,0 +1,47 @@
+﻿@model IEnumerable<sppo.Models.ProfileVM>
+
+@{
+
+}
+
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <td>Id</td>
+            <td>Username</td>
+            <td>Email</td>
+            <td>Create Date</td>
+            <td>Avg Grade</td>
+            <td>Profile Picture</td>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ProfileVM s in Model)
+        {
+            var picturePath = "~/images/" + (s.ProfilePicture ?? "noimage.jpg");
+
+            <tr>
+                <td>@s.Username</td>
+                <td>@s.Email</td>
+                <td>@s.CreateDate</td>
+                <td>@s.AvgGrade</td>
+                <td><img src=@picturePath asp-append-version="true" class="rounded-circle" height="40" width="40" alt="Picture not loaded." />
+                </td>
+                <td><button class="btn btn-primary" onclick="window.location='/Profile/Show?profileID=@s.Id'">Detalji</button></td>
+                <td><a href="/Profile/Show?profileID=@s.Id">Klikni</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    img {
+        width: 50px;
+        height: 50px;
+        border: 1px solid black;
+        float: left;
+        margin: 10px;
+    }
+</style>
