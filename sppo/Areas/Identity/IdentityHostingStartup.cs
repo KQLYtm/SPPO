@@ -20,9 +20,9 @@ namespace sppo.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("MyContextConnection")));
 
-                services.AddIdentity<Profile, IdentityRole>()
+                services.AddIdentity<Profile, IdentityRole>(
+                  options => options.SignIn.RequireConfirmedAccount = true)
                  .AddEntityFrameworkStores<MyContext>()
-                 .AddDefaultUI()
                  .AddDefaultTokenProviders();
             });
         }
