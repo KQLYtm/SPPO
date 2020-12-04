@@ -22,7 +22,7 @@ namespace sppo.Areas.Identity
 
                 services.AddIdentity<Profile, IdentityRole>(
                   options => options.SignIn.RequireConfirmedAccount = true)
-                 .AddEntityFrameworkStores<MyContext>()
+                 .AddEntityFrameworkStores<MyContext>().AddDefaultUI()
                  .AddDefaultTokenProviders();
             });
         }
