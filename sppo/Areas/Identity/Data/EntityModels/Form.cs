@@ -10,7 +10,7 @@ namespace SPPO.EntityModels
         public int Id { get; set; }
         public int? Experience { get; set; }
         public bool? Employed { get; set; }
-        public byte[] Cv { get; set; }
+        public string Cv { get; set; }
         public string MotivationMessage { get; set; }
         public bool? DrivingLicence { get; set; }
         public int? NumberOfLanguages { get; set; }
@@ -18,7 +18,7 @@ namespace SPPO.EntityModels
         public User User { get; set; }
         public int? CompanyId { get; set; }
         public Company Company { get; set; }
-        public int AdvertisementId { get; set; }
+        public int? AdvertisementId { get; set; }
         public Advertisement Advertisement { get; set; }
     }
 }
