@@ -1,4 +1,9 @@
-﻿@model sppo.Models.ProfileVM
+﻿@using Microsoft.AspNetCore.Identity
+@using sppo.Areas.Identity.Data
+
+@model sppo.Models.ProfileVM
+@inject UserManager<Profile> UserManager
+
 @{
     var picturePath = "~/images/" + (Model.ProfilePicture ?? "noimage.jpg");
 
@@ -104,61 +109,221 @@
                         </div>
                     </div>
                 </div>
+                <label>Comments: </label>
+                <div id="commentList">
+                    @if (Model.reviews != null)
+                    {
+                        @foreach (var x in Model.reviews)
+                        {
+                            <div id="commentWrapp">
+                                <img id="giverImg" src="@x.GiverPicture" />
+                                <div id="details">
+                                    @if (UserManager.GetUserName(User) == x.GiverUserName)
+                                    {
+                                        <button class="btn btn-outline-danger" onclick="DeleteComment(@x.Id)" id="btn">Delete</button>
+                                        <button class="btn btn-outline-info" onclick="EditComment(@x.Id,this)" id="btn-edit">Edit</button>
+
+                                    }
+                                    <label id="giverUserName">@x.GiverUserName:</label>
+                                    <p id="commentDate">@x.PostDate</p>
+                                    <textarea  readonly="readonly" cols="70"  onclick="auto_grow(this);" id="com">@x.Commentary</textarea>
+                                </div>
+                            </div>
+
+                        }
+                    }
+                </div>
             </div>
         </div>
     </div>
 </body>
+<div class="form-group" id="stars">
+    <span class="text-warning">
+        <i class="ratingStar far fa-star" value="1"></i>
+        <i class="ratingStar far fa-star" value="2"></i>
+        <i class="ratingStar far fa-star" value="3"></i>
+        <i class="ratingStar far fa-star" value="4"></i>
+        <i class="ratingStar far fa-star" value="5"></i>
+    </span>
+</div>
+
+<div id="inputComment">
+    <label>Input Comment</label>
+    <textarea class="form-control" rows="5" id="comment" required></textarea>
+    <button id="saveComment" onclick="AddComment()">Comment</button>
+</div>
+
 <style>
-#pic {
-  border-radius: 5px;
-  cursor: pointer;
-  transition: 0.3s;
-}
+    /*Comments*/
+    .btn {
+        float: right;
+       margin-right:10px;
+       margin-top:5px;
+    }
+    #commentWrapp {
+        background-color: whitesmoke;
+        margin-bottom: 20px;
+        border-radius: 20px;
+    }
 
-#pic:hover {opacity: 0.7;}
+    #giverImg {
+        border-radius: 70%;
+        margin: 6px 15px 0 10px;
+        float: left;
+        width: 75px;
+        height: 75px;
+    }
 
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  padding-top: 50px;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.9);
-}
+    #giverUserName {
+        color: darkred;
+        margin-top: 15px;
+    }
 
-.modal-content {
-  margin: auto;
-  display: block;
-  width: 40%;
-  /*max-width: 700px;*/
-}
+    #commentDate {
+        font-size: 11px;
+        color: gray;
+        margin-top: -10px;
+    }
 
-.close {
-  position: absolute;
-  top: 15px;
-  right: 35px;
-  color: #f1f1f1;
-  font-size: 40px;
-  font-weight: bold;
-  transition: 0.3s;
-}
+    #com {
+        padding: 10px 0px 7px 0px;
+        /*margin-left: 105px;*/
+        background-color: whitesmoke;
+        border: none;
+        overflow: hidden;
+        resize: none;
+        margin-left:10px;
+    }
+    /*Comments*/
 
-.close:hover,
-.close:focus {
-  color: #bbb;
-  text-decoration: none;
-  cursor: pointer;
-}
+    #pic {
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
 
+
+        #pic:hover {
+            opacity: 0.7;
+        }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        padding-top: 50px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0,0.9);
+    }
+
+    .modal-content {
+        margin: auto;
+        display: block;
+        width: 40%;
+        /*max-width: 700px;*/
+    }
+
+    .close {
+        position: absolute;
+        top: 15px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
 </style>
-<script >
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    function auto_grow(element) {
+        element.style.height = "1px";
+        element.style.height = (element.scrollHeight) + "px";
+    }
+
+     //Rating stars
+    $(".ratingStar").hover(function () {
+        $(".ratingStar").addClass("far").removeClass("fas");
+        $(this).addClass("fas").removeClass("far");
+        $(this).prevAll(".ratingStar").addClass("fas").removeClass("far");
+    });
+
+    $(".ratingStar").click(function () {
+        var starValue = $(this).attr("value");
+        var url = '/Review/SaveRating?grade=' + starValue + '&reciverId=' +'@Model.Id';
+        $.get(url, function (data) {
+        });
+    });
+
+    window.onload = function () {
+        if (@Model.MyDetails.ToString().ToLower() === true) {
+            document.getElementById("stars").style.display = "none";
+            document.getElementById("inputComment").style.display = "none";
+            
+        }
+        else if(@Model.MyDetails.ToString().ToLower() === false){
+            for (var i = 0; i <= @Model.Grade; i++) {
+                $(".ratingStar:nth-child(" + i + ")").removeClass("far").addClass("fas");
+            }
+        }
+    }
+
+    function DeleteComment(id) {
+        var url = '/Review/DeleteComment?commentId=' + id;
+        $.get(url, function (d) {
+            window.location.reload();
+        });
+    }
+
+    function EditComment(id, x) {
+        var parent = x.parentElement;
+        var text = parent.children.item(4);
+
+        auto_grow(text);
+        text.style.border = "1px solid red";
+        text.removeAttribute('readonly');
+
+        var save = document.createElement("button");
+        save.setAttribute("class", "btn btn-outline-info");
+        save.innerHTML = "Save";
+        save.setAttribute("id", "konj");
+        
+        parent.appendChild(save);
+        
+    
+
+
+        save.onclick = function () {
+            text.style.border = "none";
+            var url = '/Review/Edit?id=' + id + '&comment=' + text.value;
+            $.get(url, function (data) {
+                window.location.reload();
+
+            });
+
+
+            parent.removeChild(save);
+
+
+        }
+        //save.style.position = "absolute";
+        //save.style.marginBottom = "100px";
+        
+        
+    }
+
 
     var modal = document.getElementById("myModal");
-
     var img = document.getElementById("pic");
     var modalImg = document.getElementById("pic1");
     img.onclick = function () {
@@ -167,8 +332,63 @@
     }
 
     var span = document.getElementsByClassName("close")[0];
-
     span.onclick = function () {
         modal.style.display = "none";
+
     }
+
+    //Comments
+    function AddComment() {
+        var comment = document.getElementById("comment").value;
+
+        var lista = document.getElementById("commentList");
+
+        var commentWrapp = document.createElement("div");
+        commentWrapp.setAttribute("id", "commentWrapp");
+
+        var img = document.createElement("img");
+        img.setAttribute("id", "giverImg");
+
+        var btn = document.createElement("button");
+        btn.setAttribute("id", "btn");
+        btn.setAttribute("class", "btn btn-danger");
+        btn.innerHTML = "Delete comment";
+
+        var giverUserName = document.createElement("label");
+        giverUserName.setAttribute("id", "giverUserName");
+        giverUserName.innerHTML = "@UserManager.GetUserName(User)";
+
+        var commentDate = document.createElement("p");
+        commentDate.setAttribute("id", "commentDate");
+        commentDate.innerHTML = new Date();
+
+        var com = document.createElement("div");
+        com.setAttribute("id", "com");
+        com.innerHTML = comment;
+
+        var details = document.createElement("div");
+        details.setAttribute("id", "details");
+        details.appendChild(btn);
+        details.appendChild(giverUserName);
+        details.appendChild(commentDate);
+        details.appendChild(com);
+
+        commentWrapp.appendChild(img);
+        commentWrapp.appendChild(details);
+
+
+        lista.appendChild(commentWrapp);
+
+         var url = '/Review/SaveComment?comment=' + comment + '&reciverId=' + '@Model.Id';
+
+        $.get(url, function (data) {
+            img.setAttribute("src", data);
+            window.location.reload();
+        });
+
+
+
+
+    }
+
 </script>
