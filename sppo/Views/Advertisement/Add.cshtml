@@ -1,0 +1,58 @@
+﻿@using sppo.Models.Advertisement
+
+@model AdvertisementAddVM
+<h1>Add new Advertisement</h1>
+
+<form asp-action="Save" asp-controller="Advertisement">
+    <div class="form-group">
+        <label>Name</label>
+        <input asp-for="Name" type="text" class="form-control" id="Nem" aria-describedby="emailHelp" placeholder="Enter name">
+    </div>
+    <div class="form-group">
+        <input asp-for="StartDate" type="date" class="form-control" id="StartDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" style="display:none">
+    </div>
+    <div class="form-group">
+        <label>End Date</label>
+        <input asp-for="EndDate" type="date" class="form-control" id="EndDate" onblur="ValidateDate()">
+        <p id="ValidationMessage" class="active"></p>
+    </div>
+    <div class="form-group">
+        <label>Job Title</label>
+        <select asp-for="JobId" asp-items="@Model.jobs">
+            <option>Choose job</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Description</label>
+        <textarea asp-for="Description" class="form-control" id="Description" rows="3"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+<script>
+    function ValidateDate() {
+
+        var endDate = new Date(document.getElementById("EndDate").value)
+        var startDate = new Date(document.getElementById("StartDate").value)
+        if (endDate < startDate) {
+            document.getElementById("ValidationMessage").classList.remove("active");
+            document.getElementById("ValidationMessage").innerHTML = "Invalid End Date";
+        }
+        else {
+            document.getElementById("ValidationMessage").classList.add("active");
+        }
+    }
+</script>
+
+<style>
+    p {
+        color: red;
+        font-weight: bold;
+    }
+
+    .active {
+        display: none;
+    }
+</style> 

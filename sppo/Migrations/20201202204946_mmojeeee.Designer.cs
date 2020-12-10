@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using sppo.Data;
 
 namespace sppo.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20201202204946_mmojeeee")]
+    partial class mmojeeee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -638,20 +640,20 @@ namespace sppo.Migrations
                     b.Property<string>("Commentary")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GiverId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("CompanyId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("PostDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ReciverId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GiverId");
+                    b.HasIndex("CompanyId");
 
-                    b.HasIndex("ReciverId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("reviews");
                 });
@@ -1100,13 +1102,13 @@ namespace sppo.Migrations
 
             modelBuilder.Entity("SPPO.EntityModels.Review", b =>
                 {
-                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Giver")
+                    b.HasOne("SPPO.EntityModels.Company", "Company")
                         .WithMany()
-                        .HasForeignKey("GiverId");
+                        .HasForeignKey("CompanyId");
 
-                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Reciver")
+                    b.HasOne("SPPO.EntityModels.User", "User")
                         .WithMany()
-                        .HasForeignKey("ReciverId");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("SPPO.EntityModels.Statistic", b =>

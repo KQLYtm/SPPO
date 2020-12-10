@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using sppo.Areas.Identity.Data;
+using sppo.Models.ReviewVM;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -24,6 +25,10 @@ namespace sppo.Models
         public string Company { get; set; }
         public string Language { get; set; }
         public string Theme { get; set; }
+        public float? Grade { get; set; }
+        public bool MyDetails { get; set; }
+
+        public List<ReviewsVM> reviews { get; set; }
 
     }
 }
