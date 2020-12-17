@@ -12,13 +12,10 @@ namespace SPPO.EntityModels
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Email { get; set; }
-        public byte[]? Image { get; set; }
-        public string PhoneNumber { get; set; }
         public string CompanyRepresenterFirstName { get; set; }
         public string CompanyRepresenterLastName { get; set; }
         public string Adress { get; set; }
-        public Profile Account { get; set; }
+        public Profile Profile { get; set; }
         public int? CreditCardId { get; set; }
         public CreditCard CreditCard { get; set; }
         public int? CityId { get; set; }

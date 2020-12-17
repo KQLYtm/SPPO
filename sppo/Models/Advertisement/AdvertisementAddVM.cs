@@ -21,6 +21,7 @@ namespace sppo.Models.Advertisement
         public string ProfileId { get; set; }
         public string CompanyName { get; set; }
         public string UserName { get; set; }
+        public string CurrentUserId { get; set; }
 
 
         public List<SelectListItem> jobs { get; set; }
@@ -34,5 +35,6 @@ namespace sppo.Models.Advertisement
                );
             }
         }
+       
     }
 }
