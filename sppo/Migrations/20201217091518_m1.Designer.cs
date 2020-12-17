@@ -10,8 +10,8 @@ using sppo.Data;
 namespace sppo.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20201128130417_nova")]
-    partial class nova
+    [Migration("20201217091518_m1")]
+    partial class m1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -180,9 +180,6 @@ namespace sppo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CompanyId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -195,19 +192,17 @@ namespace sppo.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ProfileId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasIndex("JobId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ProfileId");
 
                     b.ToTable("advertisements");
                 });
@@ -278,19 +273,10 @@ namespace sppo.Migrations
                     b.Property<int?>("CreditCardId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<int?>("LoyaltyPointsId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -354,17 +340,11 @@ namespace sppo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AccountId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("EditChangeTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte[]>("EditImage")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("EditImage")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EditPassword")
                         .HasColumnType("nvarchar(max)");
@@ -375,9 +355,12 @@ namespace sppo.Migrations
                     b.Property<string>("EditUserName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ProfileId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId1");
+                    b.HasIndex("ProfileId");
 
                     b.ToTable("edits");
                 });
@@ -390,9 +373,6 @@ namespace sppo.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AdvertisementId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CompanyId")
                         .HasColumnType("int");
 
                     b.Property<byte[]>("Cv")
@@ -413,16 +393,17 @@ namespace sppo.Migrations
                     b.Property<int?>("NumberOfLanguages")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
+                    b.Property<string>("ProfileId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ProfileId1")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AdvertisementId");
 
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("ProfileId1");
 
                     b.ToTable("forms");
                 });
@@ -544,10 +525,16 @@ namespace sppo.Migrations
                     b.Property<int?>("AdvertisementId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CompanyId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GiverId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ReceiverId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Receiverd")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("SentDate")
@@ -556,16 +543,13 @@ namespace sppo.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AdvertisementId");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("GiverId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ReceiverId");
 
                     b.ToTable("messages");
                 });
@@ -586,15 +570,15 @@ namespace sppo.Migrations
                     b.Property<int?>("Duration")
                         .HasColumnType("int");
 
+                    b.Property<string>("ProfileId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ProfileId");
 
                     b.ToTable("news");
                 });
@@ -606,12 +590,6 @@ namespace sppo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AccountId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
@@ -621,14 +599,17 @@ namespace sppo.Migrations
                     b.Property<int?>("FormId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ProfileId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int?>("ReviewId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId1");
-
                     b.HasIndex("FormId");
+
+                    b.HasIndex("ProfileId");
 
                     b.HasIndex("ReviewId");
 
@@ -645,20 +626,20 @@ namespace sppo.Migrations
                     b.Property<string>("Commentary")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CompanyId")
-                        .HasColumnType("int");
+                    b.Property<string>("GiverId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("PostDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("ReciverId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("GiverId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ReciverId");
 
                     b.ToTable("reviews");
                 });
@@ -691,14 +672,14 @@ namespace sppo.Migrations
                     b.Property<int?>("LogId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("ProfileId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LogId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ProfileId");
 
                     b.ToTable("statistics");
                 });
@@ -978,17 +959,13 @@ namespace sppo.Migrations
 
             modelBuilder.Entity("SPPO.EntityModels.Advertisement", b =>
                 {
-                    b.HasOne("SPPO.EntityModels.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
-
                     b.HasOne("SPPO.EntityModels.Job", "Job")
                         .WithMany()
                         .HasForeignKey("JobId");
 
-                    b.HasOne("SPPO.EntityModels.User", "User")
+                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Profile")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ProfileId");
                 });
 
             modelBuilder.Entity("SPPO.EntityModels.City", b =>
@@ -1017,9 +994,9 @@ namespace sppo.Migrations
 
             modelBuilder.Entity("SPPO.EntityModels.Edit", b =>
                 {
-                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Account")
+                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Profile")
                         .WithMany()
-                        .HasForeignKey("AccountId1");
+                        .HasForeignKey("ProfileId");
                 });
 
             modelBuilder.Entity("SPPO.EntityModels.Form", b =>
@@ -1030,13 +1007,9 @@ namespace sppo.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SPPO.EntityModels.Company", "Company")
+                    b.HasOne("SPPO.EntityModels.User", "Profile")
                         .WithMany()
-                        .HasForeignKey("CompanyId");
-
-                    b.HasOne("SPPO.EntityModels.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ProfileId1");
                 });
 
             modelBuilder.Entity("SPPO.EntityModels.Job", b =>
@@ -1076,33 +1049,31 @@ namespace sppo.Migrations
                         .WithMany()
                         .HasForeignKey("AdvertisementId");
 
-                    b.HasOne("SPPO.EntityModels.Company", "Company")
+                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Giver")
                         .WithMany()
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("GiverId");
 
-                    b.HasOne("SPPO.EntityModels.User", "User")
+                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Receiver")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ReceiverId");
                 });
 
             modelBuilder.Entity("SPPO.EntityModels.News", b =>
                 {
-                    b.HasOne("SPPO.EntityModels.User", "User")
+                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Profile")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProfileId");
                 });
 
             modelBuilder.Entity("SPPO.EntityModels.Notification", b =>
                 {
-                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId1");
-
                     b.HasOne("SPPO.EntityModels.Form", "Form")
                         .WithMany()
                         .HasForeignKey("FormId");
+
+                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId");
 
                     b.HasOne("SPPO.EntityModels.Review", "Review")
                         .WithMany()
@@ -1111,13 +1082,13 @@ namespace sppo.Migrations
 
             modelBuilder.Entity("SPPO.EntityModels.Review", b =>
                 {
-                    b.HasOne("SPPO.EntityModels.Company", "Company")
+                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Giver")
                         .WithMany()
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("GiverId");
 
-                    b.HasOne("SPPO.EntityModels.User", "User")
+                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Reciver")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ReciverId");
                 });
 
             modelBuilder.Entity("SPPO.EntityModels.Statistic", b =>
@@ -1126,9 +1097,9 @@ namespace sppo.Migrations
                         .WithMany()
                         .HasForeignKey("LogId");
 
-                    b.HasOne("SPPO.EntityModels.User", "User")
+                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Profile")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ProfileId");
                 });
 
             modelBuilder.Entity("SPPO.EntityModels.Transaction", b =>
@@ -1166,7 +1137,7 @@ namespace sppo.Migrations
             modelBuilder.Entity("sppo.Areas.Identity.Data.Profile", b =>
                 {
                     b.HasOne("SPPO.EntityModels.Company", "Company")
-                        .WithOne("Account")
+                        .WithOne("Profile")
                         .HasForeignKey("sppo.Areas.Identity.Data.Profile", "CompanyID");
 
                     b.HasOne("SPPO.EntityModels.Language", "Language")
@@ -1178,7 +1149,7 @@ namespace sppo.Migrations
                         .HasForeignKey("ThemeId");
 
                     b.HasOne("SPPO.EntityModels.User", "User")
-                        .WithOne("Account")
+                        .WithOne("Profile")
                         .HasForeignKey("sppo.Areas.Identity.Data.Profile", "UserID");
                 });
 #pragma warning restore 612, 618

@@ -14,10 +14,8 @@ namespace SPPO.EntityModels
         public string MotivationMessage { get; set; }
         public bool? DrivingLicence { get; set; }
         public int? NumberOfLanguages { get; set; }
-        public int? UserId { get; set; }
-        public User User { get; set; }
-        public int? CompanyId { get; set; }
-        public Company Company { get; set; }
+        public string ProfileId { get; set; }
+        public User Profile { get; set; }
         public int AdvertisementId { get; set; }
         public Advertisement Advertisement { get; set; }
     }

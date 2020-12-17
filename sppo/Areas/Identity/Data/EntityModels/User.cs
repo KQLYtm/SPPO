@@ -30,7 +30,7 @@ namespace SPPO.EntityModels
         public Role Role { get; set; }
         public int? LoyaltyPointsId { get; set; }
         public LoyaltyPoints LoyaltyPoints { get; set; }
-        public Profile Account { get; set; }
+        public Profile Profile { get; set; }
 
     }
 }

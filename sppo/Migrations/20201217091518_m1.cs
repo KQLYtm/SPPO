@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace sppo.Migrations
 {
-    public partial class Inicijalnamigracija : Migration
+    public partial class m1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -222,9 +222,6 @@ namespace sppo.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    Image = table.Column<byte[]>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
                     CompanyRepresenterFirstName = table.Column<string>(nullable: true),
                     CompanyRepresenterLastName = table.Column<string>(nullable: true),
                     Adress = table.Column<string>(nullable: true),
@@ -312,43 +309,6 @@ namespace sppo.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "advertisements",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    StartDate = table.Column<DateTime>(nullable: true),
-                    EndDate = table.Column<DateTime>(nullable: true),
-                    JobId = table.Column<int>(nullable: true),
-                    CompanyId = table.Column<int>(nullable: true),
-                    UserId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_advertisements", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_advertisements_companies_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "companies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_advertisements_jobs_JobId",
-                        column: x => x.JobId,
-                        principalTable: "jobs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_advertisements_users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
@@ -367,7 +327,7 @@ namespace sppo.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    Image = table.Column<byte[]>(nullable: true),
+                    ProfilePicture = table.Column<string>(nullable: true),
                     CreateDate = table.Column<DateTime>(nullable: true),
                     AvgGrade = table.Column<float>(nullable: true),
                     UserID = table.Column<int>(nullable: true),
@@ -405,6 +365,171 @@ namespace sppo.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "accountGrades",
+                columns: table => new
+                {
+                    GiversID = table.Column<string>(nullable: false),
+                    RecieverID = table.Column<string>(nullable: false),
+                    Graded = table.Column<bool>(nullable: true),
+                    Grade = table.Column<float>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_accountGrades", x => new { x.RecieverID, x.GiversID });
+                    table.ForeignKey(
+                        name: "FK_accountGrades_AspNetUsers_GiversID",
+                        column: x => x.GiversID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_accountGrades_AspNetUsers_RecieverID",
+                        column: x => x.RecieverID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "advertisements",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    StartDate = table.Column<DateTime>(nullable: true),
+                    EndDate = table.Column<DateTime>(nullable: true),
+                    JobId = table.Column<int>(nullable: true),
+                    ProfileId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_advertisements", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_advertisements_jobs_JobId",
+                        column: x => x.JobId,
+                        principalTable: "jobs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_advertisements_AspNetUsers_ProfileId",
+                        column: x => x.ProfileId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
+                    ProviderDisplayName = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    RoleId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Value = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "edits",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EditUserName = table.Column<string>(nullable: true),
+                    EditPassword = table.Column<string>(nullable: true),
+                    EditImage = table.Column<string>(nullable: true),
+                    EditPasswordHash = table.Column<string>(nullable: true),
+                    EditChangeTime = table.Column<DateTime>(nullable: false),
+                    ProfileId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_edits", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_edits_AspNetUsers_ProfileId",
+                        column: x => x.ProfileId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "news",
                 columns: table => new
                 {
@@ -414,17 +539,17 @@ namespace sppo.Migrations
                     Description = table.Column<string>(nullable: true),
                     CreateDate = table.Column<DateTime>(nullable: false),
                     Duration = table.Column<int>(nullable: true),
-                    UserId = table.Column<int>(nullable: false)
+                    ProfileId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_news", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_news_users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "users",
+                        name: "FK_news_AspNetUsers_ProfileId",
+                        column: x => x.ProfileId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -435,22 +560,22 @@ namespace sppo.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PostDate = table.Column<DateTime>(nullable: false),
                     Commentary = table.Column<string>(nullable: true),
-                    CompanyId = table.Column<int>(nullable: true),
-                    UserId = table.Column<int>(nullable: true)
+                    GiverId = table.Column<string>(nullable: true),
+                    ReciverId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_reviews_companies_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "companies",
+                        name: "FK_reviews_AspNetUsers_GiverId",
+                        column: x => x.GiverId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_reviews_users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "users",
+                        name: "FK_reviews_AspNetUsers_ReciverId",
+                        column: x => x.ReciverId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -467,8 +592,8 @@ namespace sppo.Migrations
                     MotivationMessage = table.Column<string>(nullable: true),
                     DrivingLicence = table.Column<bool>(nullable: true),
                     NumberOfLanguages = table.Column<int>(nullable: true),
-                    UserId = table.Column<int>(nullable: true),
-                    CompanyId = table.Column<int>(nullable: true),
+                    ProfileId = table.Column<string>(nullable: true),
+                    ProfileId1 = table.Column<int>(nullable: true),
                     AdvertisementId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -481,14 +606,8 @@ namespace sppo.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_forms_companies_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "companies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_forms_users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_forms_users_ProfileId1",
+                        column: x => x.ProfileId1,
                         principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -523,8 +642,9 @@ namespace sppo.Migrations
                     Title = table.Column<string>(nullable: true),
                     SentDate = table.Column<DateTime>(nullable: false),
                     Content = table.Column<string>(nullable: true),
-                    UserId = table.Column<int>(nullable: true),
-                    CompanyId = table.Column<int>(nullable: true),
+                    GiverId = table.Column<string>(nullable: true),
+                    Receiverd = table.Column<string>(nullable: true),
+                    ReceiverId = table.Column<string>(nullable: true),
                     AdvertisementId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -537,150 +657,14 @@ namespace sppo.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_messages_companies_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "companies",
+                        name: "FK_messages_AspNetUsers_GiverId",
+                        column: x => x.GiverId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_messages_users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "accountGrades",
-                columns: table => new
-                {
-                    GiversID = table.Column<string>(nullable: false),
-                    RecieverID = table.Column<string>(nullable: false),
-                    Graded = table.Column<bool>(nullable: true),
-                    Grade = table.Column<float>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_accountGrades", x => new { x.RecieverID, x.GiversID });
-                    table.ForeignKey(
-                        name: "FK_accountGrades_AspNetUsers_GiversID",
-                        column: x => x.GiversID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
-                        name: "FK_accountGrades_AspNetUsers_RecieverID",
-                        column: x => x.RecieverID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
-                columns: table => new
-                {
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderDisplayName = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(nullable: false),
-                    RoleId = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
-                    Value = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "edits",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EditUserName = table.Column<string>(nullable: true),
-                    EditPassword = table.Column<string>(nullable: true),
-                    EditImage = table.Column<byte[]>(nullable: true),
-                    EditPasswordHash = table.Column<string>(nullable: true),
-                    EditChangeTime = table.Column<DateTime>(nullable: false),
-                    AccountId = table.Column<int>(nullable: false),
-                    AccountId1 = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_edits", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_edits_AspNetUsers_AccountId1",
-                        column: x => x.AccountId1,
+                        name: "FK_messages_AspNetUsers_ReceiverId",
+                        column: x => x.ReceiverId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -694,8 +678,7 @@ namespace sppo.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
-                    AccountId = table.Column<int>(nullable: false),
-                    AccountId1 = table.Column<string>(nullable: true),
+                    ProfileId = table.Column<string>(nullable: true),
                     FormId = table.Column<int>(nullable: true),
                     ReviewId = table.Column<int>(nullable: true)
                 },
@@ -703,15 +686,15 @@ namespace sppo.Migrations
                 {
                     table.PrimaryKey("PK_notifications", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_notifications_AspNetUsers_AccountId1",
-                        column: x => x.AccountId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_notifications_forms_FormId",
                         column: x => x.FormId,
                         principalTable: "forms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_notifications_AspNetUsers_ProfileId",
+                        column: x => x.ProfileId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -754,7 +737,7 @@ namespace sppo.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<int>(nullable: true),
+                    ProfileId = table.Column<string>(nullable: true),
                     LogId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -767,9 +750,9 @@ namespace sppo.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_statistics_users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "users",
+                        name: "FK_statistics_AspNetUsers_ProfileId",
+                        column: x => x.ProfileId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -780,19 +763,14 @@ namespace sppo.Migrations
                 column: "GiversID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_advertisements_CompanyId",
-                table: "advertisements",
-                column: "CompanyId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_advertisements_JobId",
                 table: "advertisements",
                 column: "JobId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_advertisements_UserId",
+                name: "IX_advertisements_ProfileId",
                 table: "advertisements",
-                column: "UserId");
+                column: "ProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -882,9 +860,9 @@ namespace sppo.Migrations
                 filter: "[LoyaltyPointsId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_edits_AccountId1",
+                name: "IX_edits_ProfileId",
                 table: "edits",
-                column: "AccountId1");
+                column: "ProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_forms_AdvertisementId",
@@ -892,14 +870,9 @@ namespace sppo.Migrations
                 column: "AdvertisementId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_forms_CompanyId",
+                name: "IX_forms_ProfileId1",
                 table: "forms",
-                column: "CompanyId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_forms_UserId",
-                table: "forms",
-                column: "UserId");
+                column: "ProfileId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_jobs_CategoryId",
@@ -923,24 +896,19 @@ namespace sppo.Migrations
                 column: "AdvertisementId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_messages_CompanyId",
+                name: "IX_messages_GiverId",
                 table: "messages",
-                column: "CompanyId");
+                column: "GiverId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_messages_UserId",
+                name: "IX_messages_ReceiverId",
                 table: "messages",
-                column: "UserId");
+                column: "ReceiverId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_news_UserId",
+                name: "IX_news_ProfileId",
                 table: "news",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_notifications_AccountId1",
-                table: "notifications",
-                column: "AccountId1");
+                column: "ProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_notifications_FormId",
@@ -948,19 +916,24 @@ namespace sppo.Migrations
                 column: "FormId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_notifications_ProfileId",
+                table: "notifications",
+                column: "ProfileId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_notifications_ReviewId",
                 table: "notifications",
                 column: "ReviewId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_reviews_CompanyId",
+                name: "IX_reviews_GiverId",
                 table: "reviews",
-                column: "CompanyId");
+                column: "GiverId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_reviews_UserId",
+                name: "IX_reviews_ReciverId",
                 table: "reviews",
-                column: "UserId");
+                column: "ReciverId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_statistics_LogId",
@@ -968,9 +941,9 @@ namespace sppo.Migrations
                 column: "LogId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_statistics_UserId",
+                name: "IX_statistics_ProfileId",
                 table: "statistics",
-                column: "UserId");
+                column: "ProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_transactions_CreditCardId",
@@ -1052,9 +1025,6 @@ namespace sppo.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "forms");
 
             migrationBuilder.DropTable(
@@ -1064,25 +1034,28 @@ namespace sppo.Migrations
                 name: "logs");
 
             migrationBuilder.DropTable(
+                name: "advertisements");
+
+            migrationBuilder.DropTable(
+                name: "jobs");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "categories");
+
+            migrationBuilder.DropTable(
+                name: "companies");
+
+            migrationBuilder.DropTable(
                 name: "languages");
 
             migrationBuilder.DropTable(
                 name: "themes");
 
             migrationBuilder.DropTable(
-                name: "advertisements");
-
-            migrationBuilder.DropTable(
-                name: "companies");
-
-            migrationBuilder.DropTable(
-                name: "jobs");
-
-            migrationBuilder.DropTable(
                 name: "users");
-
-            migrationBuilder.DropTable(
-                name: "categories");
 
             migrationBuilder.DropTable(
                 name: "cities");

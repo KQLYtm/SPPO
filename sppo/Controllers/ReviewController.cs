@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -75,6 +76,28 @@ namespace sppo.Controllers
             _context.SaveChanges();
         
             
+        }
+        public float? CalculateAvgGrade(string ProfileId)
+        {
+            int countOfGrades = 0;
+            float? AvgGrade = 0;
+            var profile = _context.profiles.Where(x => x.Id == ProfileId).FirstOrDefault();
+            var recivier = _context.accountGrades.Where(x => x.RecieverID == ProfileId).ToList();
+            foreach (var x in recivier)
+            {
+                float? gr = x.Grade;
+                AvgGrade += gr;
+                countOfGrades++;
+            }
+
+            if (AvgGrade > 0)
+            {
+                profile.AvgGrade = AvgGrade / countOfGrades;
+                _context.SaveChanges();
+                return AvgGrade / countOfGrades;
+            }
+            else
+                return null;
         }
     }
 }
