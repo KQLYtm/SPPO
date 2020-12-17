@@ -27,9 +27,17 @@
             <td>@s.Email</td>
             <td>@s.CreateDate</td>
             <td>@s.AvgGrade</td>
-            <td>
-                <img src=@picturePath asp-append-version="true" class="rounded-circle" height="40" width="40" alt="Picture not loaded." />
-            </td>
+			<td>
+				@if (s.ProfilePicture == null)
+				{
+					<img src="https://bootdey.com/img/Content/avatar/avatar7.png"class="rounded-circle" height="40" width="40" alt="Picture not loaded." />
+				}
+				else
+				{
+					<img src=@s.ProfilePicture asp-append-version="true" class="rounded-circle" height="40" width="40" alt="Picture not loaded." />
+
+				}
+			</td>
             <td><button class="btn btn-primary" onclick="window.location='/Profile/Show?profileID=@s.Id'">Detalji</button></td>
             @*<td><a href="/Profile/Details?id="@s.Id>Detalji</a></td>*@
             <td><button class="btn btn-primary" onclick="window.location='/Profile/Details?id=@s.Id'">Prikazi profil</button></td>
