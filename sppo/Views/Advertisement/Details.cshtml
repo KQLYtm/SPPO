@@ -7,6 +7,7 @@
 }
 
 @model AdvertisementAddVM
+
 <div id="container">
 	<div id="Profile">
 		<img src="@picturePath" id="ProfileImg" asp-append-version="true" />
@@ -71,4 +72,16 @@
 		float: left;
 	}
 </style>
+
+<script>
+    function EditAdv(id){
+
+        var url = '/Advertisement/Add?AdvId=' + id;
+
+        $.get(url, function (data) { });
+
+    }
+
+
+</script>
 
