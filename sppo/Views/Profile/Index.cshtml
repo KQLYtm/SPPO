@@ -8,8 +8,7 @@
 <table class="table table-hover">
     <thead>
         <tr>
-            <td>Id</td>
-            <td>Username</td>
+            <td>Full name</td>
             <td>Email</td>
             <td>Create Date</td>
             <td>Avg Grade</td>
@@ -23,13 +22,21 @@
             var picturePath = "~/images/" + (s.ProfilePicture ?? "noimage.jpg");
 
         <tr>
-            <td>@s.Username</td>
+            <td>@s.FirstName @s.LastName</td>
             <td>@s.Email</td>
             <td>@s.CreateDate</td>
             <td>@s.AvgGrade</td>
-            <td>
-                    <img src=@picturePath asp-append-version="true" class="rounded-circle" height="40" width="40" alt="Picture not loaded." />
-            </td>
+			<td>
+				@if (s.ProfilePicture == null)
+				{
+					<img src="https://bootdey.com/img/Content/avatar/avatar7.png"class="rounded-circle" height="40" width="40" alt="Picture not loaded." />
+				}
+				else
+				{
+					<img src=@picturePath asp-append-version="true" class="rounded-circle" height="40" width="40" alt="Picture not loaded." />
+
+				}
+			</td>
             <td><button class="btn btn-primary" onclick="window.location='/Profile/Show?profileID=@s.Id'">Detalji</button></td>
             @*<td><a href="/Profile/Details?id="@s.Id>Detalji</a></td>*@
             <td><button class="btn btn-primary" onclick="window.location='/Profile/Details?id=@s.Id'">Prikazi profil</button></td>

@@ -12,8 +12,8 @@ namespace SPPO.EntityModels
         public int Id { get; set; }
         public string Content { get; set; }
         public DateTime Date { get; set; }
-        public int AccountId { get; set; }
-        public Profile Account { get; set; }
+        public string ProfileId { get; set; }
+        public Profile Profile { get; set; }
         public int? FormId { get; set; }
         public Form Form { get; set; }
         public int? ReviewId { get; set; }

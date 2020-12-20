@@ -1,65 +1,87 @@
 ﻿@using sppo.Models.Advertisement
 
 <link rel="stylesheet" href="~/css/rating.css" />
+
+@{
+	var picturePath = "~/images/" + (Model.ProfileImg ?? "noimage.jpg");
+}
+
 @model AdvertisementAddVM
-    <div id="container">
-        <div id="Profile">
-            <img src="@Model.ProfileImg" id="ProfileImg" />
-            <h3 id="CompUserName">@Model.CompanyName @Model.UserName</h3>
-            <button id="Visit" type="button" class="btn btn-outline-secondary">Visit our Profile</button>
-        </div>
-        <div id="Adv">
-            <button id="Applay" type="button" class="btn btn-outline-secondary" style="float:right;">Applay</button>
 
-            <h3 id="Name">@Model.Name</h3>
-            <h5 id="JobName">@Model.Job</h5>
+<div id="container">
+	<div id="Profile">
+		<img src="@picturePath" id="ProfileImg" asp-append-version="true" />
+		<h3 id="CompUserName">@Model.CompanyName @Model.UserName</h3>
+		<button id="Visit" type="button" class="btn btn-outline-secondary">Visit our Profile</button>
+	</div>
+	<div id="Adv">
+		<button id="Applay" type="button" class="btn btn-outline-secondary" style="float:right;">Applay</button>
 
-            <div id="Description" style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
-                <pre style="white-space:pre-wrap;">@Model.Description</pre>
+		<h3 id="Name">@Model.Name</h3>
+		<h5 id="JobName">@Model.Job</h5>
 
-            </div>
-            
-        </div>
-    </div>
+		<div id="Description" style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+			<pre style="white-space:pre-wrap;">@Model.Description</pre>
+
+		</div>
+
+	</div>
+</div>
 
 <style>
-    *{
-        margin:0;
-        padding:0;
-    }
-#Visit{
-                float:right;
-        margin:150px 10px 0 0;
+	* {
+		margin: 0;
+		padding: 0;
+	}
 
-    }
-#ProfileImg{
-        height:80%;
-        margin:20px 0 0 10px;
-    }
-    #CompUserName {
-        padding: 40px 0 40px 0;
-            margin-left: 20px;
-    }
-    #container {
-        width: 80%;
-        height: 100%;
-            justify-content: center;
-    }
-    #Adv{
-        border:solid 1px lightgray;
-        padding:20px 20px 0 20px;
-        width:100%;
-        height:100%;
-    }
-    #Profile {
-        height: 200px;
-            background-color: #EBEBEB;
-        box-sizing: border-box;
-    }
-    #ProfileImg, #CompUserName{
-        float:left;
-    }
-    
+	#Visit {
+		float: right;
+		margin: 150px 10px 0 0;
+	}
 
+	#ProfileImg {
+		height: 80%;
+		margin: 20px 0 0 10px;
+	}
+
+	#CompUserName {
+		padding: 40px 0 40px 0;
+		margin-left: 20px;
+	}
+
+	#container {
+		width: 80%;
+		height: 100%;
+		justify-content: center;
+	}
+
+	#Adv {
+		border: solid 1px lightgray;
+		padding: 20px 20px 0 20px;
+		width: 100%;
+		height: 100%;
+	}
+
+	#Profile {
+		height: 200px;
+		background-color: #EBEBEB;
+		box-sizing: border-box;
+	}
+
+	#ProfileImg, #CompUserName {
+		float: left;
+	}
 </style>
+
+<script>
+    function EditAdv(id){
+
+        var url = '/Advertisement/Add?AdvId=' + id;
+
+        $.get(url, function (data) { });
+
+    }
+
+
+</script>
 

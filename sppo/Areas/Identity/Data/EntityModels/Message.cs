@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sppo.Areas.Identity.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,10 +12,10 @@ namespace SPPO.EntityModels
         public string Title { get; set; }
         public DateTime SentDate { get; set; }
         public string Content { get; set; }
-        public int? UserId { get; set; }
-        public User User { get; set; }
-        public int? CompanyId { get; set; }
-        public Company Company { get; set; }
+        public string GiverId { get; set; }
+        public Profile Giver { get; set; }
+        public string Receiverd { get; set; }
+        public Profile Receiver { get; set; }
         public int? AdvertisementId { get; set; }
         public Advertisement Advertisement { get; set; }
     }

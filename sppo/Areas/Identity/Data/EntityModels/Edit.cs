@@ -12,11 +12,11 @@ namespace SPPO.EntityModels
         public int Id { get; set; }
         public string EditUserName { get; set; }
         public string EditPassword { get; set; }
-        public byte[] EditImage { get; set; }
+        public string EditImage { get; set; }
         public string EditPasswordHash { get; set; }
         public DateTime EditChangeTime { get; set; }
-        public int AccountId { get; set; }
-        public Profile Account { get; set; }
+        public string ProfileId { get; set; }
+        public Profile Profile { get; set; }
 
     }
 }
