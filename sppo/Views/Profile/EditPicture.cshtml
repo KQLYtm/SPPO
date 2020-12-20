@@ -1,0 +1,74 @@
+﻿@model sppo.Models.ProfileVMs.ProfileEditPictureVM
+@{
+    ViewData["Title"] = "EditSliku";
+}
+<style>
+    .btn {
+        margin-top: 10px;
+    }
+</style>
+
+<h1>Izaberi novu sliku</h1>
+
+<form asp-controller="Profile" asp-action="EditPicture" method="post" enctype="multipart/form-data">
+    <table>
+        <tr><td><input asp-for="ID" type="hidden" /></td></tr>
+        <tr><td><input asp-for="ExistingProfileImagePath" type="hidden" /></td></tr>
+        @*<tr>
+            <td><h6>Slika profila</h6></td>
+            <td class="custom-file">
+                <input asp-for="ProfileImage" class="form-group custom-file-input" accept="image/*" />
+                <label class="custom-file-label">Izaberi sliku</label>
+            </td>
+            <td><span asp-validation-for="ProfileImage" class="text-danger"></span></td>
+        </tr>*@
+        <tr>
+            <td>
+                <div class="col-sm-8 custom-file">
+                    <input asp-for="ProfileImage" class="form-group custom-file-input" accept="image/*" id="menu_images" />
+                    <label class="custom-file-label">Izaberi sliku</label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td><input type="submit" class="btn btn-primary" value="Save" /></td>
+        </tr>
+        <tr>
+            <td>
+            <img id="menu_image" class="preview_img" />
+
+            </td>
+        </tr>
+    </table>
+</form>
+
+@section Scripts{
+    <script>
+            $(document).ready(function () {
+                $('.custom-file-input').on("change", function () {
+                    var fileName = $(this).val().split("\\").pop();
+                    $(this).next('.custom-file-label').html(fileName);
+                });
+            });
+        document.getElementById("menu_images").onchange = function () {
+            var reader = new FileReader();
+            //check if its image
+            if (this.files[0].type.indexOf("image") == -1) {
+                alert("Invalid Type");
+                $("#menu_image").attr("src", "blank");
+                $("#menu_image").hide();
+                $('#menu_images').wrap('<form>').closest('form').get(0).reset();
+                $('#menu_images').unwrap();
+                return false;
+            }
+            reader.onload = function (e) {
+                // get loaded data and render thumbnail.
+                document.getElementById("menu_image").src = e.target.result;
+                $("#menu_image").show();
+            };
+
+            // read the image file as a data URL.
+            reader.readAsDataURL(this.files[0]);
+        };
+    </script>
+}

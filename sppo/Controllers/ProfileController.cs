@@ -16,7 +16,6 @@ using sppo.Models.ReviewVM;
 
 namespace sppo.Controllers
 {
-    [Authorize]
     public class ProfileController : Controller
     {
         private readonly UserManager<Profile> _userManager;
@@ -30,6 +29,7 @@ namespace sppo.Controllers
             _webHostEnvironment = webHostEnvironment;
             _userManager = userManager;
         }
+
         public async Task<IActionResult> Show(string profileID)
         {
             var profile = await _db.profiles.Where(s => s.Id == profileID).Select(a => new ProfileVM
@@ -91,7 +91,7 @@ namespace sppo.Controllers
                 vm.reviews = Lista;
 
             }
-           
+
 
             vm.Id = profile.Id;
             vm.Username = profile.UserName;
@@ -108,70 +108,132 @@ namespace sppo.Controllers
             vm.Theme = profile.Theme?.Name;
             return View(vm);
 
-    }
-    public async Task<IActionResult> Index()
-    {
+        }
 
-        var profile = await _db.profiles.Select(a => new ProfileVM
+        public async Task<IActionResult> Index()
         {
-            Id = a.Id,
-            Username = a.UserName,
-            Email = a.Email,
-            ProfilePicture = a.ProfilePicture,
-            //User = a.User.Account.UserName,
-            //Company =a.Company.Account.UserName,
-            //Language=a.Language.Name,
-            //Theme=a.Theme.Name
 
-        }).ToListAsync();
-
-
-        return View(profile);
-    }
-
-
-    [HttpGet]
-    public ViewResult Create()
-    {
-        return View();
-    }
-    [ValidateAntiForgeryToken]
-    [HttpPost]
-    public async Task<IActionResult> Create(ProfileDetailsVM model)
-    {
-        if (ModelState.IsValid)
-        {
-            string uniquFileName = UploadedPicture(model);
-            Profile a = new Profile
+            var profile = await _db.profiles.Select(a => new ProfileVM
             {
-                UserName = model.Username,
-                Email = model.Email,
-                ProfilePicture = uniquFileName
+                Id = a.Id,
+                Username = a.UserName,
+                Email = a.Email,
+                ProfilePicture = a.ProfilePicture,
+                //User = a.User.Account.UserName,
+                //Company =a.Company.Account.UserName,
+                //Language=a.Language.Name,
+                //Theme=a.Theme.Name
+
+            }).ToListAsync();
+
+
+            return View(profile);
+        }
+
+
+        [HttpGet]
+        public ViewResult Create()
+        {
+            return View();
+        }
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> Create(ProfileDetailsVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                string uniquFileName = UploadedPicture(model);
+
+                Profile a = new Profile
+                {
+                    UserName = model.Username,
+                    Email = model.Email,
+
+                };//provjera
+                if (model.ProfileImage != null)
+                {
+                    if (!model.ProfileImage.ContentType.Contains("image"))
+                    {
+                        ModelState.AddModelError(nameof(model.ProfileImage), "You can only upload image.");
+                        //return View(model);
+                    }
+                    else
+                    {
+                        a.ProfilePicture = uniquFileName;
+                    }
+                }
+                else
+                {
+                    a.ProfilePicture = null;
+                }
+                _db.Add(a);
+                await _db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult EditPicture(string profileID)
+        {
+            Profile profile = _db.profiles.Find(profileID);
+
+            if (profile == null)
+                return View();
+
+            ProfileEditPictureVM obj = new ProfileEditPictureVM
+            {
+                ID = profile.Id,
+                ExistingProfileImagePath = profile.ProfilePicture,
+
 
             };
 
-            _db.Add(a);
-            await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return View(obj);
         }
-        return View();
-    }
 
-    private string UploadedPicture(ProfileDetailsVM model)
-    {
-        string uniqueFileName = null;
-
-        if (model.ProfileImage != null)
+        [HttpPost]
+        public IActionResult EditPicture(ProfileEditPictureVM obj)
         {
-            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-            uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ProfileImage.FileName;
-            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            Profile profile = _db.profiles.Find(obj.ID);
+            if (profile != null)
             {
-                model.ProfileImage.CopyTo(fileStream);
+                if (obj.ExistingProfileImagePath != null)
+                {
+                    if (!obj.ProfileImage.ContentType.Contains("image"))
+                    {
+                        ModelState.AddModelError(nameof(obj.ProfileImage), "You can only upload image.");
+                        return View(obj);
+                    }
+                    else
+                    {
+                        profile.ProfilePicture = UploadedPicture(obj);
+                    }
+                }
+
+                _db.Update(profile);
+                _db.SaveChanges();
+                return Redirect("/Profile/Details/" + obj.ID);
             }
+            return View("Create");
+
         }
-        return uniqueFileName;
+      
+        private string UploadedPicture(ProfileDetailsVM model)
+        {
+            string uniqueFileName = null;
+
+            if (model.ProfileImage != null)
+            {
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ProfileImage.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.ProfileImage.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
+        }
     }
-}
 }
