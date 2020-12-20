@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using sppo.Areas.Identity.Data;
 using sppo.Data;
@@ -35,13 +38,16 @@ namespace sppo.Controllers
         }
         public async Task<IActionResult> Show(string profileID)
         {
+            var user = _db.profiles.Where(x => x.Id == profileID).FirstOrDefault();
+            User u = _db.users.Where(x => x.Id == user.UserID).FirstOrDefault();
+            Company c = _db.companies.Where(x => x.Id == user.CompanyID).FirstOrDefault();
+
             var profile = await _db.profiles.Where(s => s.Id == profileID).Select(a => new ProfileVM
             {
                 Id = a.Id,
-                Username = a.UserName,
                 Email = a.Email,
                 ProfilePicture = a.ProfilePicture,
-
+                PhoneNumber = a.PhoneNumber
 
             }).ToListAsync();
 
@@ -94,10 +100,14 @@ namespace sppo.Controllers
                 vm.reviews = Lista;
 
             }
-
+            Profile p = _db.profiles.Where(x => x.Id == id).FirstOrDefault();
+            User u = _db.users.Where(x => x.Id == p.UserID).FirstOrDefault();
+            Company c = _db.companies.Where(x => x.Id == p.CompanyID).FirstOrDefault();
 
             vm.Id = profile.Id;
-            vm.Username = profile.UserName;
+            vm.FirstName = u != null ? u.FirstName : c.CompanyRepresenterFirstName;
+            vm.LastName = u != null ? u.LastName : c.CompanyRepresenterLastName;
+            vm.Company = c != null ? c.Name : null;
             vm.Email = profile.Email;
             vm.CreateDate = profile.CreateDate;
             vm.AvgGrade = profile.AvgGrade;
@@ -118,7 +128,7 @@ namespace sppo.Controllers
             var profile = await _db.profiles.Select(a => new ProfileVM
             {
                 Id = a.Id,
-                Username = a.UserName,
+                FirstName = a.UserName,
                 Email = a.Email,
                 ProfilePicture = a.ProfilePicture,
                 //User = a.User.Account.UserName,
@@ -215,6 +225,128 @@ namespace sppo.Controllers
                 }
             }
             return uniqueFileName;
+        }
+
+        private Country ReturnCountry(int? CityId)
+        {
+            Country c = new Country();
+            var city = _db.cities.Where(x => x.Id == CityId).FirstOrDefault();
+            var country = _db.countries.Where(x => x.Id == city.CountryId).FirstOrDefault();
+            c.Name = country.Name;
+            return c;
+        }
+
+        public IActionResult EditProfile(string ProfileId)
+        {
+            Profile p = _db.profiles.Find(ProfileId);
+            ProfileEditVM pe = new ProfileEditVM();
+            if (p.UserID != null)
+            {
+                User u = _db.users.Where(x => x.Id == p.UserID).FirstOrDefault();
+                pe.Country = ReturnCountry(u.CityId);
+                pe.CountryId = u.City.CountryId;
+                pe.FirstName = u.FirstName;
+                pe.LastName = u.LastName;
+                pe.HighSchoolName = u.HighSchoolName;
+                pe.Adress = u.Address;
+                pe.CollegeName = u.CollegeName;
+                pe.BirthDate = u.BirthDate;
+                pe.GenderId = u.GenderId;
+                pe.CityName = u.City.Name;
+                pe.BirthDate = u.BirthDate;
+            }
+            else
+            {
+                Company c = _db.companies.Where(x => x.Id == p.CompanyID).FirstOrDefault();
+                pe.FirstName = c.CompanyRepresenterFirstName;
+                pe.LastName = c.CompanyRepresenterLastName;
+                pe.Country = ReturnCountry(c.CityId);
+                pe.CountryId = c.City.CountryId;
+                pe.Adress = c.Adress;
+                pe.CompanyName = c.Name;
+                pe.CityName = c.City.Name;
+            }
+
+            pe.ProfileId = p.Id;
+            pe.Email = p.Email;
+            pe.ProfilePicture = p.ProfilePicture;
+            pe.PhoneNumber = p.PhoneNumber;
+
+            List<SelectListItem> cities = _db.cities.Where(s => s.CountryId == pe.CountryId).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+            List<SelectListItem> countries = _db.countries.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
+            List<SelectListItem> genders = _db.genders.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
+
+            pe.cities = cities;
+            pe.countries = countries;
+            pe.genders = genders;
+
+            return View(pe);
+        }
+
+        public List<SelectListItem> RefreshCities(int CountryId)
+        {
+            List<SelectListItem> cities = _db.cities.Where(s => s.CountryId == CountryId).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+            return cities;
+        }
+
+        public IActionResult SaveChanges(ProfileEditVM vm)
+        {
+            Profile p = _db.profiles.Find(vm.ProfileId);
+            User user = _db.users.Where(x => x.Id == p.UserID).FirstOrDefault();
+            Company company = _db.companies.Where(s => s.Id == p.CompanyID).FirstOrDefault();
+            if (p != null && user != null)
+            {
+                user.FirstName = vm.FirstName;
+                user.LastName = vm.LastName;
+                user.Email = vm.Email;
+                user.Address = vm.Adress;
+                user.CollegeName = vm.CollegeName;
+                user.BirthDate = vm.BirthDate;
+                user.PhoneNumber = vm.PhoneNumber;
+                user.CityId = vm.CityId;
+                user.HighSchoolName = vm.HighSchoolName;
+                user.GenderId = vm.GenderId;
+            }
+            else if (p != null && company != null)
+            {
+                company.CompanyRepresenterFirstName = vm.FirstName;
+                company.CompanyRepresenterLastName = vm.LastName;
+                company.Adress = vm.Adress;
+                //company.PhoneNumber = vm.PhoneNumber;
+                company.CityId = vm.CityId;
+                if (vm.CompanyName != null)
+                    company.Name = vm.CompanyName;
+                else
+                    company.Name = "Company name can not be empty. You are registered as company. Set your company name!";
+            }
+
+            _db.SaveChanges();
+            return Redirect("/Profile/Details?id=" + vm.ProfileId);
+        }
+
+        public IActionResult EditPicture(ProfileEditVM obj)
+        {
+            Profile profile = _db.profiles.Find(obj.ProfileId);
+            ProfileEditVM edit = new ProfileEditVM
+            {
+                ProfileId = profile.Id,
+                ExistingProfileImagePath = profile.ProfilePicture
+            };
+            if (profile != null)
+            {
+                if (edit.ExistingProfileImagePath != null)
+                {
+                    if (!obj.ProfileImage.ContentType.Contains("image"))
+                    {
+                        ModelState.AddModelError("", "You can only upload image.");
+                    }
+                    else
+                        profile.ProfilePicture = UploadedPicture(obj);
+                }
+                _db.Update(profile);
+                _db.SaveChanges();
+            }
+            return Redirect("/Profile/EditProfile?ProfileId=" + profile.Id);
         }
     }
 }

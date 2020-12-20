@@ -39,7 +39,6 @@ namespace sppo.Controllers
                 Name = a.Name,
                 CurrentUserId = _userManager.GetUserId(User)
 
-
             }).SingleOrDefault();
 
             return View(ad);
