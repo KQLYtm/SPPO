@@ -1,0 +1,132 @@
+﻿@model sppo.Models.ProfileVMs.ProfileEditVM
+@{
+	var picturePath = "~/images/" + (Model.ProfilePicture ?? "noimage.jpg");
+}
+<div class="container rounded bg-white mt-5 mb-5">
+	<div class="row">
+		<div class="d-flex flex-column align-items-center text-center p-3 py-5">
+			<img class="rounded-circle mt-5" width="250" src="@picturePath" asp-append-version="true" style="margin-bottom:10px">
+			<form asp-controller="Profile" asp-action="EditPicture"  enctype="multipart/form-data">
+				<input asp-for="ProfileId" type="hidden" />
+				<input asp-for="ExistingProfileImagePath" type="hidden" />
+				<div class="custom-file" style="margin-bottom:20px">
+					<input asp-for="ProfileImage" class="form-group custom-file-input" accept="image/*" />
+					<button class="btn btn-primary form-control" style="float:right" type="submit">Save</button>
+					<span asp-validation-for="ProfileImage" class="text-danger"	></span>
+					<label class="custom-file-label">Edit your picture</label>
+				</div>
+			</form>
+			<span id="spn" class="span font-weight-bold">@Model.FirstName @Model.LastName</span><span class="span">@Model.Country.Name</span><span class="span">@Model.CityName</span>
+		</div>
+		<div class="col-md-5 border-right">
+			<form class="p-3 py-5" asp-controller="Profile" asp-action="SaveChanges">
+				<input type="hidden" asp-for="ProfileId" />
+				<div class="d-flex flex-row align-items-center back" style="width:120px;margin:0" onclick="window.location='/Profile/Details?id=@Model.ProfileId'">
+					<i class="fas fa-arrow-left"></i>
+					<h6 style="margin-top:4.5px">Back to home</h6>
+				</div>
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<h6 class="text-right" style="font-size:25px">Edit your profile</h6>
+				</div>
+				<div class="row mt-2">
+					<div class="col-md-6"><label class="lbl labels">FirstName</label><input type="text" class="form-control" asp-for="@Model.FirstName"></div>
+					<div class="col-md-6"><label class="lbl labels">LastName</label><input type="text" class="form-control" asp-for="@Model.LastName"></div>
+				</div>
+				<div class="row mt-3" id="adress">
+					<div class="col-md-12"><label class="labels">PhoneNumber</label><input type="text" class="form-control" asp-for="@Model.PhoneNumber"></div>
+					<div class="col-md-12"><label class="labels">Adress</label><input type="text" class="form-control" asp-for="Adress"></div>
+					<div class="col-md-12" id="highscool"><label class="labels">HighSchoolName</label><input type="text" class="form-control" asp-for="HighSchoolName"></div>
+					<div class="col-md-12" id="college"><label class="labels">CollegeName</label><input type="text" class="form-control" asp-for="CollegeName"></div>
+				</div>
+				<div class="row mt-3">
+					<div class="col-md-6"><label class="labels">Country</label><select class="form-control" asp-for="@Model.CountryId" asp-items="@Model.countries" onchange="SelectedCountry()" id="mySelection"></select></div>
+					<div class="col-md-6"><label class="labels">State/Region</label><select class="form-control" asp-for="@Model.CityId" asp-items="@Model.cities" id="cities"></select></div>
+					<div class="col-md-6" id="gender"><label class="labels">Gender</label><select class="form-control" asp-for="@Model.GenderId" asp-items="@Model.genders" id="cities"></select></div>
+					<div class="col-md-6" id="birthDate"><label class="labels">BirthDate</label><input type="date" class="form-control" asp-for="@Model.BirthDate"/></div>
+				</div>
+				<div class="mt-5 text-center"><button class="btn btn-primary profile-button form-control" type="submit">Save Profile</button></div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<style>
+	.back:hover {
+		color: #682773;
+		cursor: pointer
+	}
+
+	.span {
+		font-size: 15px;
+	}
+	#spn {
+		font-size:18px;
+		margin-top: 30px;
+	}
+</style>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+
+<script>
+	$(document).ready(function () {
+		$('.custom-file-input').on("change", function () {
+			var fileName = $(this).val().split("\\").pop();
+			$(this).next('.custom-file-label').html(fileName);
+			
+		});
+	});
+
+	window.onload = function () {
+		if ('@Model.CompanyName' != "") {
+			// Delete all div's that company don't have
+			document.getElementById("highscool").remove();
+			document.getElementById("college").remove();
+			document.getElementById("gender").remove();
+			document.getElementById("birthDate").remove();
+
+			// get parent and create new div, label and input for company name
+			var x = document.getElementById("adress");
+			var compName = document.createElement("div");
+			var label = document.createElement("label");
+			var input = document.createElement("input");
+
+			// change firstName and LastName to CompanyRepresenter
+			document.getElementsByClassName("lbl")[0].innerHTML = "RepresenterFirstName";
+			document.getElementsByClassName("lbl")[1].innerHTML = "RepresenterLastName";
+
+
+			// set label attributes and text
+			label.setAttribute("class", "labels");
+		    label.innerHTML = 'CompanyName';
+
+			// set attribute for div
+		    compName.setAttribute("class", "col-md-12");
+
+			// set input attributes
+			input.setAttribute("name", "CompanyName");
+			input.setAttribute("value",'@Model.CompanyName');
+		    input.setAttribute("class", "form-control");
+			input.setAttribute("type", "text");
+
+			// append div to parent, than append label and input to new div
+		    x.appendChild(compName);
+		    compName.appendChild(label);
+		    compName.appendChild(input);
+		}
+	}
+	function SelectedCountry() {
+		var url = '/Profile/RefreshCities?CountryId=' + document.getElementById("mySelection").value;
+		$.get(url, function (d) {
+			// set length of old list to the length of the new created list
+			document.getElementById("cities").options.length = d.length;
+			for (var i = 0; i < d.length; i++) {
+				// set values and text for new list
+				document.getElementById("cities")[i].value = d[i].value;
+				console.log(document.getElementById("cities")[i].value);
+				document.getElementById("cities")[i].text = d[i].text;
+			}
+		});
+	}
+
+</script>

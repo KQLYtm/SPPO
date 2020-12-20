@@ -38,7 +38,6 @@ namespace sppo.Controllers
                 UserName = a.Profile.User.FirstName + ' ' + a.Profile.User.LastName,
                 Name=a.Name
 
-
             }).SingleOrDefault();
 
             return View(ad);

@@ -54,7 +54,6 @@ namespace sppo.Controllers
                 GiverId = _userManager.GetUserId(User),
                 Reciver = _context.profiles.Find(reciverId),
                 PostDate = DateTime.Now
-
             };
             _context.Add(r);
             _context.SaveChanges();
