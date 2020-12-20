@@ -13,7 +13,6 @@ using SPPO.EntityModels;
 
 namespace sppo.Controllers
 {
-
     public class AdvertisementController : Controller
     {
         private readonly MyContext _context;
@@ -128,6 +127,18 @@ namespace sppo.Controllers
                 _context.SaveChanges();
             }
             return Redirect("/Home/Index");
+        }
+        public async Task<IActionResult> Delete(int AdvId)
+        {
+            var adv = await _context.advertisements.FindAsync(AdvId);
+
+            if (adv!=null)
+            {
+                _context.Remove(adv);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("GetAll");
         }
 
     }

@@ -33,17 +33,10 @@
             <div class="custom-file">
                 <input asp-for="ProfileImage " class="form-control custom-file-input">
                 <label class="custom-file-label">Choose Photo...</label>
+                <span asp-validation-for="ProfileImage" class="text-danger"></span>
             </div>
         </div>
     </div>
-    @*<div>
-            <td><h6>Slika profila</h6></td>
-            <td class="custom-file">
-                <input asp-for="Cv" class="form-group custom-file-input" />
-                <label class="custom-file-label">Izaberi sliku</label>
-            </td>
-            <td><span asp-validation-for="Cv" class="text-danger"></span></td>
-        </div>*@
 
     <div asp-validation-summary="All" class="text-danger"></div>
 

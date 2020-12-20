@@ -22,12 +22,12 @@
 			<h7>@x.Job</h7>
 			<pre style="height: 30px;
          text-overflow: ellipsis;white-space: nowrap; overflow: hidden;" class="card-text">@x.Description</pre>
-		</div>
-		<p id="link">
-			For more information go
-			<a href="/Advertisement/Details?AdvId=@x.Id" style="color:red;">here</a>
-		</p>
-	</div>
+    </div>
+    <a href="/Advertisement/Delete?AdvId=@x.Id">Delete</a>
+    <p id="link">For more information go 
+    <a href="/Advertisement/Details?AdvId=@x.Id" style="color:red;">here</a>
+     </p>
+</div>
 }
 <style>
 	#link {

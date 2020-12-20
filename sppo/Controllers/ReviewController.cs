@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using sppo.Areas.Identity.Data;
@@ -55,6 +56,7 @@ namespace sppo.Controllers
                 Reciver = _context.profiles.Find(reciverId),
                 PostDate = DateTime.Now
             };
+            //r.Giver.ProfilePicture = _context.profiles.Where(x => x.Id == _userManager.GetUserId(User)).ToString();
             _context.Add(r);
             _context.SaveChanges();
             var user = _userManager.GetUserId(User);

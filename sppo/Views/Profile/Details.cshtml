@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity
 @using sppo.Areas.Identity.Data
 
 @model sppo.Models.ProfileVM
@@ -170,12 +170,10 @@
 </div>
 
 <style>
-
 	.stars-outer {
 		position: relative;
 		display: inline-block;
 	}
-
 	.stars-inner {
 		position: absolute;
 		top: 0;
@@ -184,34 +182,29 @@
 		overflow: hidden;
 		width: 0;
 	}
-
 	.stars-outer::before {
 		content: "\f005 \f005 \f005 \f005 \f005";
 		font-family: "Font Awesome 5 Free";
 		font-weight: 900;
 		color: #ccc;
 	}
-
 	.stars-inner::before {
 		content: "\f005 \f005 \f005 \f005 \f005";
 		font-family: "Font Awesome 5 Free";
 		font-weight: 900;
 		color: #f8ce0b;
 	}
-
 	/*Comments*/
 	#btn-delete, #btn-edit {
 		float: right;
 		margin-right: 10px;
 		margin-top: 5px;
 	}
-
 	#commentWrapp {
 		background-color: whitesmoke;
 		margin-bottom: 20px;
 		border-radius: 20px;
 	}
-
 	#giverImg {
 		border-radius: 70%;
 		margin: 6px 15px 0 10px;
@@ -219,18 +212,15 @@
 		width: 75px;
 		height: 75px;
 	}
-
 	#giverUserName {
 		color: darkred;
 		margin-top: 15px;
 	}
-
 	#commentDate {
 		font-size: 11px;
 		color: gray;
 		margin-top: -10px;
 	}
-
 	#com {
 		padding: 10px 0px 7px 0px;
 		/*margin-left: 105px;*/
@@ -241,18 +231,14 @@
 		margin-left: 10px;
 	}
 	/*Comments*/
-
 	#pic {
 		border-radius: 5px;
 		cursor: pointer;
 		transition: 0.3s;
 	}
-
-
 		#pic:hover {
 			opacity: 0.7;
 		}
-
 	.modal {
 		display: none;
 		position: fixed;
@@ -265,14 +251,12 @@
 		background-color: rgb(0,0,0);
 		background-color: rgba(0,0,0,0.9);
 	}
-
 	.modal-content {
 		margin: auto;
 		display: block;
 		width: 40%;
 		/*max-width: 700px;*/
 	}
-
 	.close {
 		position: absolute;
 		top: 15px;
@@ -282,7 +266,6 @@
 		font-weight: bold;
 		transition: 0.3s;
 	}
-
 		.close:hover,
 		.close:focus {
 			color: #bbb;
@@ -299,14 +282,12 @@
         element.style.height = "1px";
         element.style.height = (element.scrollHeight) + "px";
     }
-
      //Rating stars
     $(".ratingStar").hover(function () {
         $(".ratingStar").addClass("far").removeClass("fas");
         $(this).addClass("fas").removeClass("far");
         $(this).prevAll(".ratingStar").addClass("fas").removeClass("far");
 	});
-
     $(".ratingStar").click(function () {
         var starValue = $(this).attr("value");
         var url = '/Review/SaveRating?grade=' + starValue + '&reciverId=' +'@Model.Id';
@@ -314,7 +295,6 @@
 			window.location.reload();
 		});
     });
-
 	window.onload = function () {
 		var url = '/Review/CalculateAvgGrade?ProfileId=' +'@Model.Id';
 		$.get(url, function (data) {
@@ -332,31 +312,25 @@
 			}
 		}
 	}
-
     function DeleteComment(id) {
         var url = '/Review/DeleteComment?commentId=' + id;
         $.get(url, function (d) {
             window.location.reload();
         });
     }
-
     function EditComment(id, x) {
         var parent = x.parentElement;
         var text = parent.children.item(4);
-
         auto_grow(text);
         text.style.border = "1px solid red";
         text.removeAttribute('readonly');
-
         var save = document.createElement("button");
         save.setAttribute("class", "btn btn-outline-info");
         save.innerHTML = "Save";
         save.setAttribute("id", "saveButton");
 		save.style.marginBottom = "35px";
-
         if (!document.getElementById("saveButton"))
             parent.appendChild(save);
-
         save.onclick = function () {
             text.style.border = "none";
             var url = '/Review/Edit?id=' + id + '&comment=' + text.value;
@@ -366,9 +340,6 @@
             parent.removeChild(save);
         }
     }
-
-
-
     var modal = document.getElementById("myModal");
     var img = document.getElementById("pic");
     var modalImg = document.getElementById("pic1");
@@ -376,61 +347,44 @@
         modal.style.display = "block";
         modalImg.src = this.src;
     }
-
     var span = document.getElementsByClassName("close")[0];
     span.onclick = function () {
         modal.style.display = "none";
-
     }
-
     //Comments
     function AddComment() {
         var comment = document.getElementById("comment").value;
-
         var lista = document.getElementById("commentList");
-
         var commentWrapp = document.createElement("div");
         commentWrapp.setAttribute("id", "commentWrapp");
-
         var img = document.createElement("img");
         img.setAttribute("id", "giverImg");
-
         var btn = document.createElement("button");
         btn.setAttribute("id", "btn");
         btn.setAttribute("class", "btn btn-danger");
         btn.innerHTML = "Delete comment";
-
         var giverUserName = document.createElement("label");
         giverUserName.setAttribute("id", "giverUserName");
         giverUserName.innerHTML = "@UserManager.GetUserName(User)";
-
         var commentDate = document.createElement("p");
         commentDate.setAttribute("id", "commentDate");
         commentDate.innerHTML = new Date();
-
         var com = document.createElement("div");
         com.setAttribute("id", "com");
         com.innerHTML = comment;
-
         var details = document.createElement("div");
         details.setAttribute("id", "details");
         details.appendChild(btn);
         details.appendChild(giverUserName);
         details.appendChild(commentDate);
         details.appendChild(com);
-
         commentWrapp.appendChild(img);
         commentWrapp.appendChild(details);
-
-
         lista.appendChild(commentWrapp);
-
          var url = '/Review/SaveComment?comment=' + comment + '&reciverId=' + '@Model.Id';
-
         $.get(url, function (data) {
             img.setAttribute("src", data);
             window.location.reload();
         });
     }
-
 </script>

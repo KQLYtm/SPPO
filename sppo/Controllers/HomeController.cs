@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using sppo.Models;
 
 namespace sppo.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -22,7 +24,14 @@ namespace sppo.Controllers
         {
             return View();
         }
-
+        public IActionResult Not()
+        {
+            return View();
+        }
+        public IActionResult User()
+        {
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();
