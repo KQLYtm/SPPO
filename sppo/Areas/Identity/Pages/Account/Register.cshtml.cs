@@ -154,7 +154,7 @@ namespace sppo.Areas.Identity.Pages.Account
                 User u = AddUser();
                 Company c = AddCompany();
 
-                var user = new Profile { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber };
+                var user = new Profile { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber, ProfilePicture= "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" };
                 if (c.Id == 0)
                 {
                     user.CompanyID = null;

@@ -7,12 +7,18 @@
 <link href="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/css/smart_wizard_all.min.css" rel="stylesheet" type="text/css" />
 
 <link rel="stylesheet" href="~/css/rating.css" />
+
+@{
+	var picturePath = "~/images/" + (Model.ProfileImg ?? "noimage.jpg");
+}
+
 @model AdvertisementAddVM
+
     <div id="boss" style="width:100%;height:100%;">
         <div id="details">
             <input type="hidden" asp-for="Id" />
             <div id="Profile">
-                <img src="@Model.ProfileImg" id="ProfileImg" />
+                <img src="@picturePath" id="ProfileImg" asp-append-version="true" />
                 <h3 id="CompUserName">@Model.CompanyName @Model.UserName</h3>
                 <button id="Visit" type="button" class="btn btn-outline-secondary">Visit our Profile</button>
             </div>

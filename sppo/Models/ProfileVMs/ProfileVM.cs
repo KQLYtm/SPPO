@@ -12,6 +12,8 @@ namespace sppo.Models
     public class ProfileVM
     {
         public string Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
         [Display(Name = "Profile Picture")]
@@ -27,7 +29,6 @@ namespace sppo.Models
         public string Theme { get; set; }
         public float? Grade { get; set; }
         public bool MyDetails { get; set; }
-
         public List<ReviewsVM> reviews { get; set; }
 
     }
