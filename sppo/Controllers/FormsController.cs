@@ -25,7 +25,7 @@ namespace sppo.Controllers
             _env = env;
             _userManager = user;
         }
-        public IActionResult SubmitApply(int AdvId,ApplayToJobVM vm)
+        public void SubmitApply(int AdvId,ApplayToJobVM vm)
         {
 
             //var Cv = System.IO.Path.GetFileName(file.FileName);
@@ -63,7 +63,6 @@ namespace sppo.Controllers
             };
             _context.Add(form);
             _context.SaveChanges();
-            return Redirect("/Advertisement/GetAll");
         }
         public IActionResult ApplayToJob(string ProfileId,int AdvId)
         {

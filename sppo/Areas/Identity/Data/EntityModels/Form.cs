@@ -10,7 +10,6 @@ namespace SPPO.EntityModels
     {
         public int Id { get; set; }
         public int? Experience { get; set; }
-
         public string Cv { get; set; }
         public string MotivationMessage { get; set; }
         public string ProfileId { get; set; }
