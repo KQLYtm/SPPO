@@ -96,7 +96,9 @@ namespace sppo.Areas.Identity.Pages.Account
                 {
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
-                    CityId = Input.CityId
+                    CityId = Input.CityId,
+                    City = _db.cities.Find(Input.CityId)
+
                 };
                 _db.Add(u);
                 _db.SaveChanges();
@@ -120,6 +122,7 @@ namespace sppo.Areas.Identity.Pages.Account
                     CompanyRepresenterFirstName = Input.FirstName,
                     CompanyRepresenterLastName = Input.LastName,
                     CityId = Input.CityId,
+                    City=_db.cities.Find(Input.CityId),
                     Name = Input.CompanyName
                 };
                 _db.Add(c);

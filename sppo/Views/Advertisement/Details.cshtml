@@ -1,4 +1,10 @@
 ﻿@using sppo.Models.Advertisement
+@using Microsoft.AspNetCore.Identity
+@using sppo.Areas.Identity.Data
+
+
+@inject UserManager<Profile> UserManager
+<link href="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/css/smart_wizard_all.min.css" rel="stylesheet" type="text/css" />
 
 <link rel="stylesheet" href="~/css/rating.css" />
 
@@ -8,80 +14,146 @@
 
 @model AdvertisementAddVM
 
-<div id="container">
-	<div id="Profile">
-		<img src="@picturePath" id="ProfileImg" asp-append-version="true" />
-		<h3 id="CompUserName">@Model.CompanyName @Model.UserName</h3>
-		<button id="Visit" type="button" class="btn btn-outline-secondary">Visit our Profile</button>
-	</div>
-	<div id="Adv">
-		<button id="Applay" type="button" class="btn btn-outline-secondary" style="float:right;">Applay</button>
+    <div id="boss" style="width:100%;height:100%;">
+        <div id="details">
+            <input type="hidden" asp-for="Id" />
+            <div id="Profile">
+                <img src="@picturePath" id="ProfileImg" asp-append-version="true" />
+                <h3 id="CompUserName">@Model.CompanyName @Model.UserName</h3>
+                <button id="Visit" type="button" class="btn btn-outline-secondary">Visit our Profile</button>
+            </div>
 
-		<h3 id="Name">@Model.Name</h3>
-		<h5 id="JobName">@Model.Job</h5>
+            <div id="Adv">
+                @if (Model.CurrentUserId == Model.ProfileId)
+                {
+                    <button id="Edit" type="button" class="btn btn-outline-secondary" style="float:right;" onclick="window.location='/Advertisement/Add?AdvId=@Model.Id'">Edit</button>
 
-		<div id="Description" style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
-			<pre style="white-space:pre-wrap;">@Model.Description</pre>
+                }
+                else
+                {
+                    @*<div class="row d-flex justify-content-center mt-200">*@
+                    <button type="button" class="btn btn-outline-secondary"
+                            onclick="Applay('@UserManager.GetUserId(User)','@Model.Id')" data-toggle="modal" data-target="#exampleModal" style="float:right;">
+                        Apply
+                    </button>
 
-		</div>
+                }
+                <h3 id="Name">@Model.Name</h3>
+                <h5 id="JobName">@Model.Job</h5>
 
-	</div>
-</div>
+                <div id="Description" style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+                    <pre style="white-space:pre-wrap;">@Model.Description</pre>
 
-<style>
-	* {
-		margin: 0;
-		padding: 0;
-	}
+                </div>
+            </div>
+        </div>
+        <div id="formica"></div>
 
-	#Visit {
-		float: right;
-		margin: 150px 10px 0 0;
-	}
+    </div>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
-	#ProfileImg {
-		height: 80%;
-		margin: 20px 0 0 10px;
-	}
+        #Visit {
+            float: right;
+            margin: 150px 10px 0 0;
+        }
 
-	#CompUserName {
-		padding: 40px 0 40px 0;
-		margin-left: 20px;
-	}
+        #ProfileImg {
+            height: 80%;
+            margin: 20px 0 0 10px;
+        }
 
-	#container {
-		width: 80%;
-		height: 100%;
-		justify-content: center;
-	}
+        #CompUserName {
+            padding: 40px 0 40px 0;
+            margin-left: 20px;
+        }
 
-	#Adv {
-		border: solid 1px lightgray;
-		padding: 20px 20px 0 20px;
-		width: 100%;
-		height: 100%;
-	}
+        .container {
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+        }
 
-	#Profile {
-		height: 200px;
-		background-color: #EBEBEB;
-		box-sizing: border-box;
-	}
+        #Adv {
+            border: solid 1px lightgray;
+            padding: 20px 20px 0 20px;
+            width: 100%;
+            height: 100%;
+        }
 
-	#ProfileImg, #CompUserName {
-		float: left;
-	}
-</style>
+        #Profile {
+            height: 200px;
+            background-color: #EBEBEB;
+            box-sizing: border-box;
+        }
 
-<script>
-    function EditAdv(id){
+        #ProfileImg, #CompUserName {
+            float: left;
+        }
+
+        .active {
+            
+        }
+    </style>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+
+    <link href="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1581152092/smartwizard/smart_wizard.min.css"
+          rel="stylesheet"
+          type="text/css" />
+    <link href="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1581152091/smartwizard/smart_wizard_theme_arrows.min.css"
+          rel="stylesheet"
+          type="text/css" />
+    <script type="text/javascript"
+            src="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1581152197/smartwizard/jquery.smartWizard.min.js"></script>
+
+    <script>
+    function EditAdv(id) {
 
         var url = '/Advertisement/Add?AdvId=' + id;
 
         $.get(url, function (data) { });
 
     }
+    function Hide() {
+        var home = document.getElementById("details");
+        home.hidden = true;
+    }
 
+    function Applay(ProfileId, AdvId) {
 
-</script>
+        var url = '/Forms/ApplayToJob?ProfileId=' + ProfileId + '&AdvId=' + AdvId;
+        $.get(url, function (data) {
+            $('#formica').html(data);
+        });
+        Hide();
+    }
+
+    function SaveForm() {
+        var form = $("#ApplyForm");
+        var url = '/Forms/SubmitApply?Advid=' + '@Model.Id';
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(),
+            success: function (data) {
+            }
+        });
+
+        }
+        function back() {
+            document.getElementById("ApplyForm").hidden = true;
+            document.getElementById("details").hidden = false;
+
+        
+
+        };
+
+    </script>
 
