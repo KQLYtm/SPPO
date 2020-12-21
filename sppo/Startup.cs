@@ -2,16 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using sppo.Areas.Identity.Data;
 using sppo.Data;
+using sppo.Interface;
 using sppo.Service;
 
 namespace sppo
@@ -29,8 +32,16 @@ namespace sppo
         {
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddSignalR();
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IUserConnectionManager, UserConnectionManager>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
+            services.AddMvc(config => {
+                var policy = new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser()
+                                .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            });
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -67,6 +78,10 @@ namespace sppo
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+
+                //using singalR
+                endpoints.MapHub<NotificationHub>("/NotificationHub");
+                endpoints.MapHub<NotificationUserHub>("/NotificationUserHub");
             });
         }
     }

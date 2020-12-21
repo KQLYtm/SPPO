@@ -1,0 +1,35 @@
+﻿@using sppo.Models
+@model Notifikacije
+@{ ViewData["Title"] = "SendToSpecificUser"; }
+<h1>Index</h1>
+@using (Html.BeginForm("SendToSpecificUser", "Notification", FormMethod.Post))
+{
+<div class="row">
+    <div class="col-6">
+        User Id
+    </div>
+    <div class="col-6">
+        @Html.TextBoxFor(model => Model.userId, new { @maxlength = "50" })
+    </div>
+</div>
+                <br />
+                                <div class="row">
+                                    <div class="col-6">
+                                        naslov
+                                    </div>
+                                    <div class="col-6">
+                                        @Html.TextBoxFor(model => Model.Naslov, new { @maxlength = "50" })
+                                    </div>
+                                </div>
+                                                <br />
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        Sadržaj
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        @Html.TextBoxFor(model => Model.Sadrzaj, new { @maxlength = "100" })
+                                                                    </div>
+                                                                </div>
+                                                                                <div>
+                                                                                    <button type="submit">Send to Specific User</button>
+                                                                                </div>}
