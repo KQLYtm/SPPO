@@ -17,6 +17,7 @@ namespace sppo.Controllers
 
         public HomeController(ILogger<HomeController> logger)
         {
+            // added comment
             _logger = logger;
         }
 
