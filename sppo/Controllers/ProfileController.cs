@@ -250,7 +250,6 @@ namespace sppo.Controllers
                 pe.HighSchoolName = u.HighSchoolName;
                 pe.Adress = u.Address;
                 pe.CollegeName = u.CollegeName;
-                pe.BirthDate = u.BirthDate;
                 pe.GenderId = u.GenderId;
                 pe.CityName = u.City.Name;
                 pe.BirthDate = u.BirthDate;
