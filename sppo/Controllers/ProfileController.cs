@@ -105,21 +105,21 @@ namespace sppo.Controllers
             User u = _db.users.Where(x => x.Id == p.UserID).FirstOrDefault();
             Company c = _db.companies.Where(x => x.Id == p.CompanyID).FirstOrDefault();
 
-            vm.Id = profile.Id;
-            vm.FirstName = u != null ? u.FirstName : c.CompanyRepresenterFirstName;
-            vm.LastName = u != null ? u.LastName : c.CompanyRepresenterLastName;
-            vm.Company = c != null ? c.Name : null;
-            vm.Email = profile.Email;
-            vm.CreateDate = profile.CreateDate;
-            vm.AvgGrade = profile.AvgGrade;
-            vm.PhoneNumber = profile.PhoneNumber;
-            vm.ProfilePicture = profile.ProfilePicture;
-            vm.User = profile.User?.FirstName;
-            vm.AdressUser = profile.User?.Address;
-            vm.AdressCompany = profile.Company?.Adress;
-            vm.Company = profile.Company?.Name;
-            vm.Language = profile.Language?.Name;
-            vm.Theme = profile.Theme?.Name;
+            //vm.Id = profile.Id;
+            //vm.FirstName = u != null ? u.FirstName : c.CompanyRepresenterFirstName;
+            //vm.LastName = u != null ? u.LastName : c.CompanyRepresenterLastName;
+            //vm.Company = c != null ? c.Name : null;
+            //vm.Email = profile.Email;
+            //vm.CreateDate = profile.CreateDate;
+            //vm.AvgGrade = profile.AvgGrade;
+            //vm.PhoneNumber = profile.PhoneNumber;
+            //vm.ProfilePicture = profile.ProfilePicture;
+            //vm.User = profile.User?.FirstName;
+            //vm.AdressUser = profile.User?.Address;
+            //vm.AdressCompany = profile.Company?.Adress;
+            //vm.Company = profile.Company?.Name;
+            //vm.Language = profile.Language?.Name;
+            //vm.Theme = profile.Theme?.Name;
             return View(vm);
 
         }

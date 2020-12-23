@@ -33,8 +33,7 @@ namespace sppo.Controllers
 
         [HttpPost]
         public async Task<IActionResult> SendAll(Notifikacije model)
-        {
-            // send all noticiations   
+        {            
             await _notificationHubContext.Clients.All.SendAsync("sendToUser", model.Naslov, model.Sadrzaj);
             return View();
         }
