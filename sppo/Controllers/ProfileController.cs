@@ -109,6 +109,7 @@ namespace sppo.Controllers
             vm.LastName = u != null ? u.LastName : c.CompanyRepresenterLastName;
             vm.Company = c != null ? c.Name : null;
             vm.Email = profile.Email;
+            // this some comment
             vm.CreateDate = profile.CreateDate;
             vm.AvgGrade = profile.AvgGrade;
             vm.PhoneNumber = profile.PhoneNumber;
