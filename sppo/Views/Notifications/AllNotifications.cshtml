@@ -1,0 +1,63 @@
+﻿@*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
+@model NotificationsVM
+<table id="tblNotification" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>From</th>
+            <th>What</th>
+            <th>Detail</th>
+            <th>IsRead</th>
+            <th>Notification DateTime</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var x in Model.rows)
+        {
+        <tr>
+            <td>@x.From</td>
+            <td>@x.What</td>
+            <td>@x.Detail</td>
+            <td>
+                @if (x.IsRead == true)
+                {
+                  <label>Procitano</label>
+                }
+                else
+                {
+                    <a asp-controller="Notifications" asp-action="IsItRead" asp-route-id="@x.NotId"
+                            class="btn btn-success">
+                        Oznaci kao procitano
+                    </a>
+                }
+                    </td>
+            <td>@x.Date</td>
+        </tr>
+        }
+    </tbody>
+</table>
+@*<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "/Notifications/GetNotifications",
+            traditional: true,
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                var notifications = data;
+                $.map(notifications, function (notification) {
+                    $("#tblNotification tbody").append("<tr>"
+                        + "<td>" + notification.fromUserName + "</td>"
+                        + "<td>" + notification.notiBody+ "</td>"
+                        + "<td>" + notification.message + "</td>"
+                        + "<td>" + notification.isReadSt+ "</td>"
+                        + "<td>" + notification.createdDateSt + "</td>"
+                        +"</tr>"
+                    );
+                });
+            },
+            error: function (xhr, status, error) {
+            }
+        });
+    });
+</script>*@

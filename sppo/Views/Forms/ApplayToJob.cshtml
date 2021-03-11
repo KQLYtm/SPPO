@@ -3,7 +3,8 @@
 
 @model ApplayToJobVM
 <link href="https://cdn.jsdelivr.net/npm/smartwizard@5/dist/css/smart_wizard_all.min.css" rel="stylesheet" type="text/css" />
-<form id="ApplyForm">
+<form asp-controller="Forms" asp-action="SubmitApply" enctype="multipart/form-data">
+@*<form id="ApplyForm" enctype="multipart/form-data">*@
     <input type="hidden" asp-for="AdvertisementId" />
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -63,9 +64,9 @@
                         {
                             <div id="step-3" class="">
                                 <div class="row">
-                                    <div class="col-md-6">Work Expirience<input type="text" class="form-control" asp-for="WorkExpirience" placeholder="Input Expirience" required> </div>
+                                    <div class="col-md-6">Work Experience<input type="text" class="form-control" asp-for="WorkExpirience" placeholder="Input Expirience" required> </div>
                                     <div class="col-md-6">
-                                        Upload CV<input asp-for="Cv" type="file" name="file" id="file" style="padding-top:10px;" />
+                                        Upload CV<input asp-for="Cv" type="file" style="padding-top:10px;" />
                                         <span asp-validation-for="Cv" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -80,7 +81,8 @@
                                 <div class="col-md-12"><textarea asp-for="Note" style="width:100%;" rows="4"></textarea></div>
                             </div>
                             <div class="row" style="padding-top:20px;">
-                                <input style="margin-left:15px;" type="button" value="Submit" class="btn btn-outline-secondary" onclick="SaveForm()" />
+                                @*<input style="margin-left:15px;" type="button" value="Submit" class="btn btn-outline-secondary" onclick="SaveForm()" />*@
+                                <input type="submit" value="Submit" class="btn btn-warning" />
                             </div>
                         </div>
                     </div>

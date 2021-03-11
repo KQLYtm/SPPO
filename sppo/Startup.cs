@@ -13,8 +13,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using sppo.Areas.Identity.Data;
+using sppo.Common;
 using sppo.Data;
 using sppo.Interface;
+using sppo.IService;
 using sppo.Service;
 
 namespace sppo
@@ -50,7 +52,8 @@ namespace sppo
                 options.Lockout.MaxFailedAccessAttempts = 4;
                 options.Lockout.AllowedForNewUsers = true;
             });
-
+            services.AddScoped<INotiService, NotiService>();
+            Global.ConnectionStrings = Configuration.GetConnectionString("MyContextConnection");
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

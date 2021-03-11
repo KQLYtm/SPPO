@@ -4,53 +4,72 @@
 
 }
 
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <td>Full name</td>
-            <td>Email</td>
-            <td>Create Date</td>
-            <td>Avg Grade</td>
-            <td>Profile Picture</td>
-
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (ProfileVM s in Model)
-        {
-            var picturePath = "~/images/" + (s.ProfilePicture ?? "noimage.jpg");
-
-        <tr>
-            <td>@s.FirstName @s.LastName</td>
-            <td>@s.Email</td>
-            <td>@s.CreateDate</td>
-            <td>@s.AvgGrade</td>
-			<td>
-				@if (s.ProfilePicture == null)
-				{
-					<img src="https://bootdey.com/img/Content/avatar/avatar7.png"class="rounded-circle" height="40" width="40" alt="Picture not loaded." />
-				}
-				else
-				{
-					<img src=@picturePath asp-append-version="true" class="rounded-circle" height="40" width="40" alt="Picture not loaded." />
-
-				}
-			</td>
-            <td><button class="btn btn-primary" onclick="window.location='/Profile/Show?profileID=@s.Id'">Detalji</button></td>
-            @*<td><a href="/Profile/Details?id="@s.Id>Detalji</a></td>*@
-            <td><button class="btn btn-primary" onclick="window.location='/Profile/Details?id=@s.Id'">Prikazi profil</button></td>
-        </tr>
-        }
-    </tbody>
-</table>
-
+@foreach (ProfileVM s in Model)
+{
+    var picturePath = "~/images/" + (s.ProfilePicture ?? "noimage.jpg");
+<div style="display:inline-flex">
+    <div class="container">
+        <div class="row" style="width:350%">
+            <div class="col-lg-4">
+                <div class="card m-b-30">
+                    <div class="card-body">  
+                        <div class="media">
+                            @if (s.ProfilePicture != null)
+                            {
+                                <img class="d-flex mr-3 rounded-circle img-thumbnail thumb-lg" src="@picturePath" asp-append-version="true" />
+                            }
+                            else
+                            {
+                                <img class="d-flex mr-3 rounded-circle img-thumbnail thumb-lg" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Picture not loaded." />
+                            }
+                            <div class="media-body">
+                                <h5 class="mt-0 font-18 mb-1">@s.FirstName @s.LastName</h5>
+                                <p class="text-muted font-14">@s.Email</p>
+                                <ul class="social-links list-inline mb-0">
+                                    <li class="list-inline-item">
+                                        <button class="btn btn-primary" onclick="window.location='/Profile/Details?id=@s.Id'">Prikazi profil</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
 <style>
-    img {
-        width: 50px;
-        height: 50px;
-        border: 1px solid black;
-        float: left;
-        margin: 10px;
+
+    body {
+        background: #eff3f6;
+    }
+
+    .thumb-lg {
+        height: 88px;
+        width: 88px;
+    }
+
+    .card {
+        border: none;
+        box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .m-b-30 {
+        margin-bottom: 30px;
+    }
+
+    .social-links li a {
+        -webkit-border-radius: 50%;
+        background: #fcfdfd;
+        border-radius: 50%;
+        color: #9f9f9f;
+        display: inline-block;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        width: 30px;
     }
 </style>

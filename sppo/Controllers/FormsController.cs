@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using sppo.Areas.Identity.Data;
 using sppo.Data;
 using sppo.Models.Forms;
@@ -25,32 +26,32 @@ namespace sppo.Controllers
             _env = env;
             _userManager = user;
         }
-        public void SubmitApply(int AdvId,ApplayToJobVM vm)
+
+        public IActionResult ViewAll(int id)
         {
+            var model = new FormViewVM
+            {
+                Id = id,
+                rows = _context.forms.Where(s => s.AdvertisementId==id).Select(a => new FormViewVM.Row
+                {
+                    ProfileId=a.ProfileId,
+                    Profile=a.Profile.UserName,
+                    AdvertisementId=a.AdvertisementId,
+                    Advertisement=a.Advertisement.Name,
+                    Experience=a.Experience,
+                    MotivationMessage=a.MotivationMessage
+                }).ToList()
+            };
+            return View(model);
+        }
+        public IActionResult SubmitApply(int AdvId,ApplayToJobVM vm)
+        {
+            //2 metod
+            //MemoryStream ms = new MemoryStream();
+            //var f = vm.Cv.OpenReadStream();
 
-            //var Cv = System.IO.Path.GetFileName(file.FileName);
-            //var CvPath = System.IO.Path.Combine(_env.WebRootPath, "file", Cv);
-
-            //check if its pdf format!
-            //string pdf = Path.GetExtension(Cv);
-            //if (pdf.ToLower() != ".pdf")
-            //{
-            //    return View();
-            //}
-            //if (file.Length > 0)
-            //{
-            //    using (var stream = new FileStream(CvPath, FileMode.Create))
-            //    {
-            //         file.CopyToAsync(stream);
-            //    }
-            //    //formVM.Cv = Cv;
-            //}
-            //var form = new Form
-            //{
-            //    Cv = formVM.Cv,
-            //};
-            //_db.forms.Add(form);
-            //await _db.SaveChangesAsync();
+            //f.CopyTo(ms);
+            //byte[] c1 = ms.ToArray();
             Form form = new Form
             {
                 Experience = vm.WorkExpirience,
@@ -58,11 +59,13 @@ namespace sppo.Controllers
                 ProfileId = _userManager.GetUserId(User),
                 Profile = _context.profiles.Find(_userManager.GetUserId(User)),
                 AdvertisementId = AdvId,
-                Advertisement = _context.advertisements.Find(vm.AdvertisementId)
-
+                Advertisement = _context.advertisements.Find(vm.AdvertisementId),
+                Cv = GetByteArrayFromCv(vm.Cv)
             };
+          
             _context.Add(form);
             _context.SaveChanges();
+            return RedirectToAction("GetAll", "Advertisement");
         }
         public IActionResult ApplayToJob(string ProfileId,int AdvId)
         {
@@ -91,10 +94,17 @@ namespace sppo.Controllers
                 app.LastName = user.LastName;
                 app.BirthDate = user.BirthDate;
                 app.Gender = user.Gender != null ? user.Gender.Name : null;
-               // application.Cv = user.Cv;
             }
 
             return View(app);
+        }
+        private byte[] GetByteArrayFromCv(IFormFile file)
+        {
+            using(var target=new MemoryStream())
+            {
+                file.CopyTo(target);
+                return target.ToArray();
+            }
         }
     }
 }

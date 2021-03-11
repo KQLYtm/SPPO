@@ -56,6 +56,18 @@ namespace sppo.Controllers
                 Reciver = _context.profiles.Find(reciverId),
                 PostDate = DateTime.Now
             };
+
+            Notification n = new Notification
+            {
+                FromUserId = _userManager.GetUserId(User),
+                ToUserId = reciverId,
+                NotiBody = "Commented profile",
+                FromUserName =_userManager.GetUserName(User),
+                Message = comment,
+                IsRead = false,
+                CreatedDate = DateTime.Now
+            };
+            _context.Add(n);
             //r.Giver.ProfilePicture = _context.profiles.Where(x => x.Id == _userManager.GetUserId(User)).ToString();
             _context.Add(r);
             _context.SaveChanges();

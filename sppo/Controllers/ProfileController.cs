@@ -36,23 +36,7 @@ namespace sppo.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
-        public async Task<IActionResult> Show(string profileID)
-        {
-            var user = _db.profiles.Where(x => x.Id == profileID).FirstOrDefault();
-            User u = _db.users.Where(x => x.Id == user.UserID).FirstOrDefault();
-            Company c = _db.companies.Where(x => x.Id == user.CompanyID).FirstOrDefault();
 
-            var profile = await _db.profiles.Where(s => s.Id == profileID).Select(a => new ProfileVM
-            {
-                Id = a.Id,
-                Email = a.Email,
-                ProfilePicture = a.ProfilePicture,
-                PhoneNumber = a.PhoneNumber
-
-            }).ToListAsync();
-
-            return View(profile);
-        }
         public async Task<IActionResult> Details(string id)
         {
             var ag = _db.accountGrades.Where(a => a.RecieverID == id && a.GiversID == _userManager.GetUserId(User)).FirstOrDefault();
@@ -132,10 +116,6 @@ namespace sppo.Controllers
                 FirstName = a.UserName,
                 Email = a.Email,
                 ProfilePicture = a.ProfilePicture,
-                //User = a.User.Account.UserName,
-                //Company =a.Company.Account.UserName,
-                //Language=a.Language.Name,
-                //Theme=a.Theme.Name
 
             }).ToListAsync();
 
@@ -144,32 +124,32 @@ namespace sppo.Controllers
         }
 
 
-        [HttpGet]
-        public ViewResult Create()
-        {
-            return View();
-        }
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public async Task<IActionResult> Create(ProfileDetailsVM model)
-        {
-            if (ModelState.IsValid)
-            {
-                string uniquFileName = UploadedPicture(model);
-                Profile a = new Profile
-                {
-                    UserName = model.Username,
-                    Email = model.Email,
-                    ProfilePicture = uniquFileName
+        //[HttpGet]
+        //public ViewResult Create()
+        //{
+        //    return View();
+        //}
+        //[ValidateAntiForgeryToken]
+        //[HttpPost]
+        //public async Task<IActionResult> Create(ProfileDetailsVM model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        string uniquFileName = UploadedPicture(model);
+        //        Profile a = new Profile
+        //        {
+        //            UserName = model.Username,
+        //            Email = model.Email,
+        //            ProfilePicture = uniquFileName
 
-                };
+        //        };
 
-                _db.Add(a);
-                await _db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            return View();
-        }
+        //        _db.Add(a);
+        //        await _db.SaveChangesAsync();
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View();
+        //}
 
         public async Task<IActionResult> DeleteProfile(string ProfileId)
         {

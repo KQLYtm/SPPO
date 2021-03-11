@@ -27,6 +27,10 @@
                 @if (Model.CurrentUserId == Model.ProfileId)
                 {
                     <button id="Edit" type="button" class="btn btn-outline-secondary" style="float:right;" onclick="window.location='/Advertisement/Add?AdvId=@Model.Id'">Edit</button>
+                    <a asp-controller="Advertisement" asp-action="Delete" asp-route-id="@Model.Id"
+                       style="float:right;" class="btn btn-outline-danger">Delete</a>
+                    <a asp-controller="Forms" asp-action="ViewAll" asp-route-id="@Model.Id"
+                       style="float:right;" class="btn btn-warning">View applyes</a>
 
                 }
                 else
@@ -36,6 +40,7 @@
                             onclick="Applay('@UserManager.GetUserId(User)','@Model.Id')" data-toggle="modal" data-target="#exampleModal" style="float:right;">
                         Apply
                     </button>
+
 
                 }
                 <h3 id="Name">@Model.Name</h3>

@@ -33,8 +33,18 @@ namespace sppo.Controllers
 
         [HttpPost]
         public async Task<IActionResult> SendAll(Notifikacije model)
-        {            
+        {
             await _notificationHubContext.Clients.All.SendAsync("sendToUser", model.Naslov, model.Sadrzaj);
+            //Notification n = new Notification
+            //{
+            //    FromUserId = _userManager.GetUserId(User),
+            //    ToUserId = reciverId,
+            //    NotiBody = "Commented profile",
+            //    FromUserName = _userManager.GetUserName(User),
+            //    Message = comment,
+            //    IsRead = false,
+            //    CreatedDate = DateTime.Now
+            //};
             return View();
         }
 
